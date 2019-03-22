@@ -6,7 +6,7 @@
 #    By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/14 16:30:04 by jmeier            #+#    #+#              #
-#    Updated: 2019/03/22 12:26:37 by jmeier           ###   ########.fr        #
+#    Updated: 2019/03/22 12:37:30 by jmeier           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,9 @@ $(NAME): $(LIB_SRC) $(O_SRC)
 	@/bin/echo -n "ァァ！」"
 	@echo "\nそして、時は動き出す。"
 
+$(O_LOC):
+	@mkdir -p $(O_LOC)
+
 $(O_LOC)/%.o: %.c | $(O_LOC)
 	@/bin/echo -n "無駄"
 	@gcc -Wall -Werror -Wextra $(H_LOC) -o $@ -c $<
@@ -57,7 +60,8 @@ force:
 
 clean:
 	@echo "ザ・ワールド！"
-	@/bin/rm -f $(O_SRC) $(O_SRC2)
+	@/bin/rm -f $(O_SRC)
+	@rm -rf $(O_LOC);
 
 fclean: clean
 	@/bin/rm -f $(NAME)
