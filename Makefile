@@ -6,25 +6,24 @@
 #    By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/14 16:30:04 by jmeier            #+#    #+#              #
-#    Updated: 2019/03/15 03:20:00 by jmeier           ###   ########.fr        #
+#    Updated: 2019/03/22 12:26:37 by jmeier           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 21sh
 
-FUNC = main
+FUNC = main read_line t_line util command expand path autocomplete \
+b_cd b_echo b_exit b_env b_setenv b_unsetenv
 
-C_LOC = src/
-C_NAM = $(addsuffix .c, $(FUNC))
-C_SRC = $(addprefix $(C_LOC), $(C_NAM))
+VPATH = src:src/builtin:src/input:src/lexerParser:src/AST:src/helper
+C_SRC = $(addsuffix, $(FUNC))
 
-O_LOC = obj/
-O_NAM = $(addsuffix .o, $(FUNC))
-O_SRC = $(addprefix $(O_LOC), $(O_NAM))
+O_LOC = obj
+O_SRC = $(addsuffix .o, $(addprefix $(O_LOC)/, $(FUNC)))
 
-LIB_LOC = ftprintf/
+LIB_LOC = ftprintf
 LIB_NAM = libftprintf.a
-LIB_SRC = $(addprefix $(LIB_LOC), $(LIB_NAM))
+LIB_SRC = $(addprefix $(LIB_LOC)/, $(LIB_NAM))
 
 H_LOC = -I inc/ -I ftprintf/inc -I ftprintf/libft/inc
 HEADERS = inc/*.h
@@ -37,7 +36,7 @@ $(NAME): $(LIB_SRC) $(O_SRC)
 	@/bin/echo -n "ァァ！」"
 	@echo "\nそして、時は動き出す。"
 
-$(O_LOC)%.o: $(C_LOC)%.c $(HEADERS)
+$(O_LOC)/%.o: %.c | $(O_LOC)
 	@/bin/echo -n "無駄"
 	@gcc -Wall -Werror -Wextra $(H_LOC) -o $@ -c $<
 	@/bin/echo -n "無駄"
