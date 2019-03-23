@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/19 17:29:40 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/03/22 18:50:38 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,29 @@
 // 			in == 'C' ? 
 // }
 
+void	handle_write(t_line *line, char in, int del_flag)
+{
+	if (del_flag)
+	{
+		--line->length;
+		write(STDOUT_FILENO, "\b \b", 3);
+		return ;
+	}
+	in == '\n' ? line_push(line, "\0") : line_push(line, &in);
+	write(STDOUT_FILENO, &in, 1);
+}
+
 int		read_line(t_line *line, t_sh *sh)
 {
 	char	in;
 
 	in = '\0';
 	read(STDIN_FILENO, &in, 1);
-	if (in == '\n')
-	{
-		line_push(line, "\0");
-		write(STDOUT_FILENO, "\n", 1);
-		return (TRUE);
-	}
-	else if (in == sh->term_settings.c_cc[VERASE] && line->length)
-	{
-		--line->length;
-		write(STDOUT_FILENO, "\b \b", 3);
-	}
-	// else if ((int)in == 27)
-	// 	handle_escape(line, sh->history);
+	if (in == sh->term_settings.c_cc[VERASE] && line->length)
+		handle_write(line, in, 1);
 	else if (in == '\t')
 		autocomplete(line, sh);
-	else if (ft_isprint(in))
-	{
-		line_push(line, &in);
-		write(STDOUT_FILENO, &in, 1);
-	}
-	return (FALSE);
+	else if (ft_isprint(in) || in == '\n')
+		handle_write(line, in, 0);
+	return (in == '\n' ? TRUE : FALSE);
 }

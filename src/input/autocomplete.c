@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/22 12:29:13 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/03/22 18:50:32 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 ** buffer.
 */
 /*
-void	cycle(t_dll *dll, char *buf, int flag)
+void	cycle(t_list *list, char *buf, int flag)
 {
 	char	c;
 	//print the buf
@@ -43,6 +43,29 @@ void	cycle(t_dll *dll, char *buf, int flag)
 		}
 	}
 }*/
+
+t_list	*create_autocomplete_ll(char *buf, int buf_len, t_list *bin, int flag)
+{
+	char	*tmp;
+	int		len;
+	t_list	*ret;
+	t_list	*top;
+
+	if (!buf_len)
+		return (bin);
+	if (!(tmp = ft_strchr(buf, '/')))
+		tmp = buf;
+	else
+		++tmp;
+	len = ft_strlen(tmp);
+	while (bin->next)
+	{
+		
+		ret = malloc(sizeof)
+	}
+	ret->next = top;
+	return (bin);
+}
 
 t_list	*directory_contents_to_ll(char *buf)
 {
@@ -100,5 +123,14 @@ void	autocomplete(t_line *line, t_sh *sh)
 		naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);
 		bin = directory_contents_to_ll(buf);
 	}
-//	cycle(create_autocomplete_dll(buf, bin), buf, naughtocomplete_len);
+	t_list *fug = create_autocomplete_ll(buf, buf_len, bin, naughtocomplete_len);
+	for (int i = 0; i < 100; i++)
+	{
+		if (fug == NULL)
+			break ;
+		printf("%s\n", fug->content);
+		fug = fug->next;
+	}
+	// cycle(create_autocomplete_ll(buf, bin), buf, naughtocomplete,
+	// 	naughtocomplete_len);
 }

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 08:50:21 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/22 12:31:32 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/03/22 18:50:39 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,16 @@ void	hash_slinging_slasher(t_sh *sh)
 		ft_map_set(&sh->env, ft_map_hash(&sh->env, tmp->var), tmp);
 		*(tmp->value)++ = '=';
 	}
+	setshell(sh);
 	ft_map_init(&sh->path, 0, 1080);
 	update_path(sh);
 }
 
-void	prompt(void)
+void	prompt(t_sh *sh)
 {
 	char	pwd[PATH_MAX];
 	char	*curr;
+	t_cont	*tmp;
 
 	if (g_clear)
 	{
@@ -81,8 +83,11 @@ void	prompt(void)
 		write(1, "\n", 1);
 	}
 	getcwd(pwd, PATH_MAX);
+	tmp = ft_map_get(&sh->env, ft_map_hash(&sh->env, "HOME"));
 	if (pwd[0] == '/' && ft_strlen(pwd) == 1)
 		curr = "/";
+	else if (!ft_strcmp(pwd, tmp->value))
+		curr = "~";
 	else
 	{
 		curr = ft_strrchr(pwd, '/');
@@ -112,17 +117,17 @@ int		main(void)
 	signal_handler(SIGTERM, quit);
 	signal_handler(SIGQUIT, quit);
 	signal_handler(SIGINT, ignore);
-	hash_slinging_slasher(&sh);
 	trie_hugger(&sh);
+	hash_slinging_slasher(&sh);
 	line = init_line(1);
-	prompt();
+	prompt(&sh);
 	while (g_running)
 	{
 		if ((!read_line(line, &sh)) && !handle_clear(line))
 			continue ;
 		line->length > 1 ? command_parse(line, &sh) : (line->length = 0);
 		if (g_running)
-			prompt();
+			prompt(&sh);
 	}
 	free(line->data);
 	free(line);
