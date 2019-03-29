@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/22 18:50:38 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/03/23 15:28:56 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ int		read_line(t_line *line, t_sh *sh)
 	read(STDIN_FILENO, &in, 1);
 	if (in == sh->term_settings.c_cc[VERASE] && line->length)
 		handle_write(line, in, 1);
-	else if (in == '\t')
-		autocomplete(line, sh);
+	else if (in == '\t' && line->length)
+		return (autocomplete(line, sh));
 	else if (ft_isprint(in) || in == '\n')
 		handle_write(line, in, 0);
 	return (in == '\n' ? TRUE : FALSE);

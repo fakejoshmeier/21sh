@@ -3,3 +3,5 @@
 .DS_Store
 *.o
 *.a
+garbage/*
+21sh

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/22 18:50:32 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/03/24 00:24:07 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,51 +20,81 @@
 ** Create a circular ll of all the PATH programs/folder progams that match the
 ** buffer.
 */
-/*
-void	cycle(t_list *list, char *buf, int flag)
+
+void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
+{
+	char	*str;
+
+	str = list->content;
+	while (*str)
+		line_push(line, &(*str++));
+	if (in == sh->term_settings.c_cc[VERASE] && line->length)
+		handle_write(line, in, 1);
+	//else if ((int)in == 27)
+	//	handle_escape(line, );
+	else if (ft_isprint(in))
+		handle_write(line, in, 0);
+	//cleanlisthere
+}
+
+void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 {
 	char	c;
-	//print the buf
-	//print the first completetion
-	while (read(STDIN_FILENO, &c, 1))
+
+	c = '\0';
+	if (!line->data)
+		return ;
+	line->length = 0;
+	if (naughtocomplete)
+		while (*naughtocomplete)
+			line_push(line, &(*naughtocomplete++));
+	write(STDOUT_FILENO, list->content, list->content_size);
+	while (list)
 	{
-		if (c == '\t')
+		if (read(STDIN_FILENO, &c, 1))
 		{
-			//clear the first one
-			
-			//cycle
-			//print the second
-		}
-		// Maybe I should set the various behaviours as helper functions so I can call them whenever
-		else
-		{
-			//print the new character whereever
-			//
+			if (c == '\t')
+			{
+				//clear the first one
+				list = list->next;
+				write(STDOUT_FILENO, list->content, list->content_size);
+			}
+			else
+				handle_switch(line, list, c, sh);
+				break ;
 		}
 	}
-}*/
+}
 
-t_list	*create_autocomplete_ll(char *buf, int buf_len, t_list *bin, int flag)
+t_list	*create_autocomplete_ll(char *buf, t_list *bin)
 {
 	char	*tmp;
 	int		len;
 	t_list	*ret;
 	t_list	*top;
+	t_list	*trash;
 
-	if (!buf_len)
-		return (bin);
-	if (!(tmp = ft_strchr(buf, '/')))
-		tmp = buf;
-	else
-		++tmp;
+	tmp = ft_strchr(buf, '/') ? ft_strchr(buf, '/') + 1 : buf;
 	len = ft_strlen(tmp);
-	while (bin->next)
+	top = NULL;
+	printf("CREATING THE FUCKING LIST!!!!!!!!!!\n");
+	while (bin)
 	{
-		
-		ret = malloc(sizeof)
+		if (ft_strnequ(tmp, bin->content, len))
+		{
+			printf("SHIT, I'M ALLOCATING STUFF WATHC THE FUCK OUT\n");
+			ret = (t_list *)malloc(sizeof(t_list));
+			ret->content_size = bin->content_size;
+			ret->content = ft_strdup(bin->content);
+			ret->next = top;
+			if (!top)
+				trash = ret;
+			top = ret;
+		}
+		bin = bin->next;
 	}
-	ret->next = top;
-	return (bin);
+	trash->next = top;
+	return (top);
 }
 
 t_list	*directory_contents_to_ll(char *buf)
@@ -85,8 +115,8 @@ t_list	*directory_contents_to_ll(char *buf)
 			continue ;
 		path[1] = ft_strjoin(path[0], f->d_name);
 		stat(path[1], &f_i);
-		ret[1] = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strjoin(f->d_name, "/"),
-		LEN(f->d_name) + 1) : ft_lstnew(ft_strdup(f->d_name), LEN(f->d_name));
+		ret[1] = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strcat(f->d_name, "/"),
+		LEN(f->d_name) + 1) : ft_lstnew(f->d_name, LEN(f->d_name));
 		ret[1]->next = ret[0];
 		ret[0] = ret[1];
 		free(path[1]);
@@ -102,35 +132,29 @@ t_list	*directory_contents_to_ll(char *buf)
 ** directory
 */
 
-void	autocomplete(t_line *line, t_sh *sh)
+int		autocomplete(t_line *line, t_sh *sh)
 {
 	t_list	*bin;
 	char	*buf;
 	char	*naughtocomplete;
-	int		buf_len;
 	int		naughtocomplete_len;
 
 	line_push(line, "\0");
 	--line->length;
 	buf = ft_strrchr((char *)line->data, ' ');
 	buf = buf ? buf + 1 : (char *)line->data;
-	buf_len = ft_strlen(buf);
-	naughtocomplete_len = ft_strlen((char *)line->data) - buf_len;
-	if (!naughtocomplete_len)
-		bin = ft_map_get(&sh->trie, (uint32_t)buf[0]);
-	else
+	naughtocomplete_len = ft_strlen((char *)line->data) - ft_strlen(buf);
+	bin = naughtocomplete_len ? directory_contents_to_ll(buf) :
+		ft_map_get(&sh->trie, (uint32_t)buf);
+	if (!bin)
+		return (FALSE);
+	naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);
+	//bin[1] = create_autocomplete_ll(buf, bin[0]);
+	cycle(create_autocomplete_ll(buf, bin), line, naughtocomplete, sh);
+	if (naughtocomplete_len)
 	{
-		naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);
-		bin = directory_contents_to_ll(buf);
+		clean_bin(&bin);
+		free(naughtocomplete);
 	}
-	t_list *fug = create_autocomplete_ll(buf, buf_len, bin, naughtocomplete_len);
-	for (int i = 0; i < 100; i++)
-	{
-		if (fug == NULL)
-			break ;
-		printf("%s\n", fug->content);
-		fug = fug->next;
-	}
-	// cycle(create_autocomplete_ll(buf, bin), buf, naughtocomplete,
-	// 	naughtocomplete_len);
+	return (FALSE);
 }

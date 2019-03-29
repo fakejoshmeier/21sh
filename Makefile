@@ -6,13 +6,13 @@
 #    By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/14 16:30:04 by jmeier            #+#    #+#              #
-#    Updated: 2019/03/22 18:50:36 by jmeier           ###   ########.fr        #
+#    Updated: 2019/03/22 22:31:42 by jmeier           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 21sh
 
-FUNC = main read_line t_line util command expand path autocomplete util2 \
+FUNC = main read_line t_line util command expand path autocomplete util2 cleanup \
 b_cd b_echo b_exit b_env b_setenv b_unsetenv
 
 VPATH = src:src/builtin:src/input:src/lexerParser:src/AST:src/helper
