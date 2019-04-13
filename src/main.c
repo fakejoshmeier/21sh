@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 08:50:21 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/23 15:17:25 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/12 02:37:25 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,10 @@ void	hash_slinging_slasher(t_sh *sh)
 	update_path(sh);
 }
 
+/*
+**	New prompt means that the cursor position has essentially been reset
+*/
+
 void	prompt(t_sh *sh)
 {
 	char	pwd[PATH_MAX];
@@ -94,6 +98,7 @@ void	prompt(t_sh *sh)
 		curr = curr ? curr + 1 : "?";
 	}
 	ft_printf(BLU"jo.sh "MAG B "%s "RES GRE"$ "RES, curr);
+	g_pos = 0;
 }
 
 /*

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sh.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/03/23 13:29:50 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/12 21:56:44 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,13 @@ typedef struct		s_line
 	size_t			width;
 }					t_line;
 
+typedef struct 		s_hist
+{
+	char			*content;
+	struct s_hist	*next;
+	struct s_hist	*prev;
+}					t_hist;
+
 typedef struct		s_cont
 {
 	char			*var;
@@ -46,6 +53,8 @@ typedef struct		s_sh
 	char			old[MAXPATHLEN];
 	char			**bin_arr;
 	struct termios	term_settings;
+	t_hist			*history;
+	t_hist			*curr;
 	t_map			trie;
 	t_map			builtin;
 	t_map			env;
@@ -53,6 +62,8 @@ typedef struct		s_sh
 }					t_sh;
 
 typedef void		(*t_fptr)(int ac, char **av, t_sh *sh);
+
+int					g_pos;
 
 int					read_line(t_line *line, t_sh *sh);
 void				enter_raw_mode(void);
@@ -62,6 +73,10 @@ void				line_resize(t_line *line, size_t size);
 void				line_push(t_line *line, void *new);
 void				*line_pop(t_line *line, void *item);
 void				*line_get(t_line *line, size_t idx);
+
+t_hist				*hist_new(char *content);
+t_hist				*hist_add(t_hist *hist, char *add);
+void				hist_del(t_hist *hist);
 
 void				signal_handler(int signal, void (*handler));
 void				ignore(void);

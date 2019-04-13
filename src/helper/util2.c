@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 17:40:17 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/22 17:41:41 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/12 02:37:27 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,6 @@ void	setshell(t_sh *sh)
 	arr[1] = "SHELL";
 	arr[2] = "21sh";
 	b_setenv(3, arr, sh);
+	sh->history = NULL;
+	sh->curr = NULL;
 }
