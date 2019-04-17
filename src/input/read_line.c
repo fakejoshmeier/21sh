@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/12 21:59:13 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/16 16:05:55 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,8 @@ void	handle_updown(t_line *line, t_sh *sh, char in)
 }
 
 // The second condition is always true
-void	handle_escape(t_line *line, t_sh *sh)
+void	handle_escape(t_line *line, t_sh *sh, char in)
 {
-	char	in;
-
-	in = '\0';
 	read(STDIN_FILENO, &in, 1);
 	in != '[' ? write(1, "\a", 1) : read(STDIN_FILENO, &in, 1);
 	if (in == 'A' || in == 'B')
@@ -105,7 +102,7 @@ int		read_line(t_line *line, t_sh *sh)
 	else if (in == '\t' && line->length)
 		return (autocomplete(line, sh));
 	else if ((int)in == 27)
-		handle_escape(line, sh);
+		handle_escape(line, sh, in);
 	else if (ft_isprint(in) || in == '\n')
 		handle_write(line, in, 0);
 	return (in == '\n' ? TRUE : FALSE);

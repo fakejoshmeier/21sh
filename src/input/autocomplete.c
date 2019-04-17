@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   autocomplete.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/24 00:24:07 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/16 17:14:04 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 	//	handle_escape(line, );
 	else if (ft_isprint(in))
 		handle_write(line, in, 0);
+	list = NULL;
 	//cleanlisthere
 }
 
@@ -42,7 +43,7 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 	char	c;
 
 	c = '\0';
-	if (!line->data)
+	if (!list)
 		return ;
 	line->length = 0;
 	if (naughtocomplete)
@@ -55,15 +56,15 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 		{
 			if (c == '\t')
 			{
-				//clear the first one
+				ft_printf("\033[%iD\033[J", list->content_size);
 				list = list->next;
 				write(STDOUT_FILENO, list->content, list->content_size);
 			}
 			else
-				handle_switch(line, list, c, sh);
 				break ;
 		}
 	}
+	handle_switch(line, list, c, sh);
 }
 
 t_list	*create_autocomplete_ll(char *buf, t_list *bin)
@@ -77,12 +78,10 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin)
 	tmp = ft_strchr(buf, '/') ? ft_strchr(buf, '/') + 1 : buf;
 	len = ft_strlen(tmp);
 	top = NULL;
-	printf("CREATING THE FUCKING LIST!!!!!!!!!!\n");
 	while (bin)
 	{
 		if (ft_strnequ(tmp, bin->content, len))
 		{
-			printf("SHIT, I'M ALLOCATING STUFF WATHC THE FUCK OUT\n");
 			ret = (t_list *)malloc(sizeof(t_list));
 			ret->content_size = bin->content_size;
 			ret->content = ft_strdup(bin->content);
@@ -145,11 +144,11 @@ int		autocomplete(t_line *line, t_sh *sh)
 	buf = buf ? buf + 1 : (char *)line->data;
 	naughtocomplete_len = ft_strlen((char *)line->data) - ft_strlen(buf);
 	bin = naughtocomplete_len ? directory_contents_to_ll(buf) :
-		ft_map_get(&sh->trie, (uint32_t)buf);
+		ft_map_get(&sh->trie, (uint32_t)buf[0]);
 	if (!bin)
 		return (FALSE);
 	naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);
-	//bin[1] = create_autocomplete_ll(buf, bin[0]);
+	ft_printf("\033[%iD\033[J", line->length);
 	cycle(create_autocomplete_ll(buf, bin), line, naughtocomplete, sh);
 	if (naughtocomplete_len)
 	{
