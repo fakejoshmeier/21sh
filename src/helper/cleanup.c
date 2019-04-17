@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 22:28:40 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/22 23:18:27 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/17 01:08:06 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 
-void	clean_bin(t_list **list)
+void	bin_helper(t_list **list, char **str)
 {
 	t_list	*tmp;
 
@@ -24,4 +24,5 @@ void	clean_bin(t_list **list)
 		*list = NULL;
 		*list = tmp;
 	}
+	ft_strdel(str);
 }

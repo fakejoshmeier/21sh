@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/04/12 21:56:44 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/17 01:08:13 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void				quit(void);
 char				**sanitize_av(char **av, int *ac);
 char				**map_to_array(t_map *map);
 void				setshell(t_sh *sh);
-void				clean_bin(t_list **list);
+void				bin_helper(t_list **list, char **str);
 
 void				update_path(t_sh *sh);
 void				command_parse(t_line *line, t_sh *sh);

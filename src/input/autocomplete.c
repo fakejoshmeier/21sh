@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/16 17:14:04 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/17 01:14:36 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 	//	handle_escape(line, );
 	else if (ft_isprint(in))
 		handle_write(line, in, 0);
-	list = NULL;
 	//cleanlisthere
 }
 
@@ -115,7 +114,7 @@ t_list	*directory_contents_to_ll(char *buf)
 		path[1] = ft_strjoin(path[0], f->d_name);
 		stat(path[1], &f_i);
 		ret[1] = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strcat(f->d_name, "/"),
-		LEN(f->d_name) + 1) : ft_lstnew(f->d_name, LEN(f->d_name));
+		LEN(f->d_name)) : ft_lstnew(f->d_name, LEN(f->d_name));
 		ret[1]->next = ret[0];
 		ret[0] = ret[1];
 		free(path[1]);
@@ -148,12 +147,12 @@ int		autocomplete(t_line *line, t_sh *sh)
 	if (!bin)
 		return (FALSE);
 	naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);
-	ft_printf("\033[%iD\033[J", line->length);
+	if (naughtocomplete_len && ft_strlen(buf) > 0)
+		ft_printf("\033[%iD\033[J", ft_strlen(buf), naughtocomplete);
+	else if (!naughtocomplete_len)
+		ft_printf("\033[%iD\033[J", line->length);
 	cycle(create_autocomplete_ll(buf, bin), line, naughtocomplete, sh);
 	if (naughtocomplete_len)
-	{
-		clean_bin(&bin);
-		free(naughtocomplete);
-	}
+		bin_helper(&bin, &naughtocomplete);
 	return (FALSE);
 }
