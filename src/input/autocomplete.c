@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/18 17:27:26 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/18 23:04:01 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 	handle_switch(line, list, c, sh);
 }
 
-t_list	*create_autocomplete_ll(char *buf, t_list *bin)
+t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 {
 	char	*tmp;
 	int		len;
 	t_list	*ret;
 	t_list	*top;
-	t_list	*trash;
+	t_list	*trash[2];
 
 	tmp = ft_strchr(buf, '/') ? ft_strchr(buf, '/') + 1 : buf;
 	len = ft_strlen(tmp);
@@ -79,17 +79,17 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin)
 	{
 		if (ft_strnequ(tmp, bin->content, len))
 		{
-			ret = (t_list *)malloc(sizeof(t_list));
-			ret->content_size = bin->content_size;
-			ret->content = ft_strdup(bin->content);
+			ret = ft_lstnew(bin->content, bin->content_size);
 			ret->next = top;
 			if (!top)
-				trash = ret;
+				trash[0] = ret;
 			top = ret;
 		}
+		trash[1] = bin;
 		bin = bin->next;
+		flag ? bin_helper(&trash[1]) : 0;
 	}
-	trash->next = top;
+	trash[0]->next = top;
 	return (top);
 }
 
@@ -143,9 +143,7 @@ int		autocomplete(t_line *line, t_sh *sh)
 	naughtocomplete_len = ft_strlen((char *)line->data) - ft_strlen(buf);
 	bin = naughtocomplete_len ? directory_contents_to_ll(buf) :
 		ft_map_get(&sh->trie, (uint32_t)buf[0]);
-	bin2 = create_autocomplete_ll(buf, bin);
-	if (naughtocomplete_len)
-		bin_helper(&bin);
+	bin2 = create_autocomplete_ll(buf, bin, naughtocomplete_len);
 	if (!bin2)
 		return (FALSE);
 	naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);

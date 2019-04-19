@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 22:28:40 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/17 18:15:50 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/18 23:04:45 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,7 @@ void	bin_helper(t_list **list)
 {
 	t_list	*tmp;
 
-	while (*list)
-	{
-		free((*list)->content);
-		tmp = (*list)->next;
-		free(*list);
-		*list = NULL;
-		*list = tmp;
-	}
+	tmp = *list;
+	free(tmp->content);
+	free(tmp);
 }
