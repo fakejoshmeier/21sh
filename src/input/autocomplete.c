@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/17 01:14:36 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/18 17:27:26 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 	char	c;
 
 	c = '\0';
-	if (!list)
-		return ;
 	line->length = 0;
 	if (naughtocomplete)
 		while (*naughtocomplete)
@@ -133,6 +131,7 @@ t_list	*directory_contents_to_ll(char *buf)
 int		autocomplete(t_line *line, t_sh *sh)
 {
 	t_list	*bin;
+	t_list	*bin2;
 	char	*buf;
 	char	*naughtocomplete;
 	int		naughtocomplete_len;
@@ -144,15 +143,16 @@ int		autocomplete(t_line *line, t_sh *sh)
 	naughtocomplete_len = ft_strlen((char *)line->data) - ft_strlen(buf);
 	bin = naughtocomplete_len ? directory_contents_to_ll(buf) :
 		ft_map_get(&sh->trie, (uint32_t)buf[0]);
-	if (!bin)
+	bin2 = create_autocomplete_ll(buf, bin);
+	if (naughtocomplete_len)
+		bin_helper(&bin);
+	if (!bin2)
 		return (FALSE);
 	naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);
-	if (naughtocomplete_len && ft_strlen(buf) > 0)
-		ft_printf("\033[%iD\033[J", ft_strlen(buf), naughtocomplete);
+	if (naughtocomplete_len && ft_strlen(buf))
+		ft_printf("\033[%iD\033[J%s", line->length, naughtocomplete);
 	else if (!naughtocomplete_len)
 		ft_printf("\033[%iD\033[J", line->length);
-	cycle(create_autocomplete_ll(buf, bin), line, naughtocomplete, sh);
-	if (naughtocomplete_len)
-		bin_helper(&bin, &naughtocomplete);
-	return (FALSE);
+	cycle(bin2, line, naughtocomplete, sh);
+	return (TRUE);
 }
