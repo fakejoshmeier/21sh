@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/23 00:25:28 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/23 00:58:34 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 	}
 	handle_switch(line, list, c, sh);
 }
+
+// The last bit to handle before I can truly call my ac complete is
+// grabbing the correct bit of a url for comparison purposes
 
 t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 {

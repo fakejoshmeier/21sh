@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 17:40:17 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/23 00:23:49 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/23 00:55:33 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,11 @@ t_list	*status_quo(char *path0, char *d_name)
 
 	path = ft_strjoin(path0, d_name);
 	stat(path, &f_i);
-	ret = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strcat(d_name, "/"),
+	if (!ft_strequ(path0, "./"))
+		ret = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strcat(path, "/"),
+		LEN(path)) : ft_lstnew(path, LEN(path));
+	else
+		ret = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strcat(d_name, "/"),
 		LEN(d_name)) : ft_lstnew(d_name, LEN(d_name));
 	free(path);
 	return (ret);
