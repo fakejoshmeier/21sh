@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/04/18 14:13:19 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/22 23:08:41 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ char				**map_to_array(t_map *map);
 void				setshell(t_sh *sh);
 void				bin_helper(t_list **list);
 void				wipe_word(int len);
+t_list				*status_quo(char *path0, char *d_name);
 
 void				update_path(t_sh *sh);
 void				command_parse(t_line *line, t_sh *sh);

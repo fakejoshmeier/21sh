@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/18 23:04:01 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/22 23:08:23 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 {
 	char	*str;
+	t_list	*tmp;
+	t_list	*second;
 
 	str = list->content;
 	while (*str)
@@ -34,7 +36,18 @@ void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 	//	handle_escape(line, );
 	else if (ft_isprint(in))
 		handle_write(line, in, 0);
-	//cleanlisthere
+	tmp = list;
+	list = list->next;
+	while (list)
+	{
+		if (list == tmp)
+			break ;
+		second = list;
+		list = list->next;
+		free(second->content);
+		free(second);
+	}
+	bin_helper(&tmp);
 }
 
 void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
@@ -72,6 +85,7 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 	t_list	*top;
 	t_list	*trash[2];
 
+	NULL_GUARD(bin);
 	tmp = ft_strchr(buf, '/') ? ft_strchr(buf, '/') + 1 : buf;
 	len = ft_strlen(tmp);
 	top = NULL;
@@ -81,8 +95,7 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 		{
 			ret = ft_lstnew(bin->content, bin->content_size);
 			ret->next = top;
-			if (!top)
-				trash[0] = ret;
+			trash[0] = !top ? ret : trash[0];
 			top = ret;
 		}
 		trash[1] = bin;
@@ -96,28 +109,27 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 t_list	*directory_contents_to_ll(char *buf)
 {
 	struct dirent	*f;
-	struct stat		f_i;
 	DIR				*dir;
 	t_list			*ret[2];
-	char			*path[2];
+	char			*path;
 
-	path[0] = ft_strchr(buf, '/') ?
+	path = ft_strchr(buf, '/') ?
 		ft_strndup(buf, ft_strrchr_ind(buf, '/') + 1) : ft_strdup("./");
-	NULL_GUARD((dir = opendir(path[0])));
+	if (!(dir = opendir(path)))
+	{
+		free(path);
+		return (NULL);
+	}
 	ret[0] = NULL;
 	while ((f = readdir(dir)))
 	{
 		if (f->d_name[0] == '.')
 			continue ;
-		path[1] = ft_strjoin(path[0], f->d_name);
-		stat(path[1], &f_i);
-		ret[1] = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strcat(f->d_name, "/"),
-		LEN(f->d_name)) : ft_lstnew(f->d_name, LEN(f->d_name));
+		ret[1] = status_quo(path, f->d_name);
 		ret[1]->next = ret[0];
 		ret[0] = ret[1];
-		free(path[1]);
 	}
-	free(path[0]);
+	free(path);
 	closedir(dir);
 	return (ret[0]);
 }
@@ -152,5 +164,7 @@ int		autocomplete(t_line *line, t_sh *sh)
 	else if (!naughtocomplete_len)
 		ft_printf("\033[%iD\033[J", line->length);
 	cycle(bin2, line, naughtocomplete, sh);
+	if (naughtocomplete_len)
+		free(naughtocomplete);
 	return (TRUE);
 }
