@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/22 23:08:23 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/23 00:25:28 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 	{
 		if (ft_strnequ(tmp, bin->content, len))
 		{
-			ret = ft_lstnew(bin->content, bin->content_size);
+			ret = jm_lstnew(bin->content, bin->content_size);
 			ret->next = top;
 			trash[0] = !top ? ret : trash[0];
 			top = ret;

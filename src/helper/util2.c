@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 17:40:17 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/22 22:32:39 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/23 00:23:49 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,17 @@ void	wipe_word(int len)
 	write(1, tmp, ft_strlen(tmp));
 	free(tmp);
 	free(tmp2);
+}
+
+t_list	*jm_lstnew(char *content, size_t content_size)
+{
+	t_list	*ret;
+
+	ret = (t_list *)malloc(sizeof(t_list));
+	ret->content = ft_strndup(content, content_size);
+	ret->content_size = content_size;
+	ret->next = NULL;
+	return (ret);
 }
 
 t_list	*status_quo(char *path0, char *d_name)
