@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/04/23 00:24:05 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/25 23:55:56 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <libgen.h>
 
 # define ENVIRON extern char **environ
+# define FUG(a, b) ft_strrchr_ind(a, b)
+# define DUG(a, b) ft_strndup(a, b)
 
 typedef struct		s_line
 {
@@ -86,8 +88,9 @@ char				**map_to_array(t_map *map);
 void				setshell(t_sh *sh);
 void				bin_helper(t_list **list);
 void				wipe_word(int len);
-t_list				*status_quo(char *path0, char *d_name);
+t_list				*status_quo(char *path0, char *d_name, int flag);
 t_list				*jm_lstnew(char *content, size_t content_size);
+char				*chunk(char *str, size_t len);
 
 void				update_path(t_sh *sh);
 void				command_parse(t_line *line, t_sh *sh);
