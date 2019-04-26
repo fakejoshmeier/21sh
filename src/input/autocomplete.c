@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/23 00:58:34 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/25 23:55:52 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 		line_push(line, &(*str++));
 	if (in == sh->term_settings.c_cc[VERASE] && line->length)
 		handle_write(line, in, 1);
-	//else if ((int)in == 27)
-	//	handle_escape(line, );
+	// else if ((int)in == 27)
+	// 	handle_escape(line, );
 	else if (ft_isprint(in))
 		handle_write(line, in, 0);
 	tmp = list;
@@ -77,9 +77,6 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 	handle_switch(line, list, c, sh);
 }
 
-// The last bit to handle before I can truly call my ac complete is
-// grabbing the correct bit of a url for comparison purposes
-
 t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 {
 	char	*tmp;
@@ -89,12 +86,12 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 	t_list	*trash[2];
 
 	NULL_GUARD(bin);
-	tmp = ft_strchr(buf, '/') ? ft_strchr(buf, '/') + 1 : buf;
+	tmp = ft_strchr(buf, '/') ? ft_strrchr(buf, '/') + 1 : buf;
 	len = ft_strlen(tmp);
 	top = NULL;
 	while (bin)
 	{
-		if (ft_strnequ(tmp, bin->content, len))
+		if (ft_strnequ(tmp, chunk(bin->content, bin->content_size), len))
 		{
 			ret = jm_lstnew(bin->content, bin->content_size);
 			ret->next = top;
@@ -109,30 +106,35 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 	return (top);
 }
 
+/*
+** Gross ass macros to beat the norme's line limits
+*/
+
 t_list	*directory_contents_to_ll(char *buf)
 {
 	struct dirent	*f;
 	DIR				*dir;
 	t_list			*ret[2];
-	char			*path;
+	char			*p;
+	int				flag;
 
-	path = ft_strchr(buf, '/') ?
-		ft_strndup(buf, ft_strrchr_ind(buf, '/') + 1) : ft_strdup("./");
-	if (!(dir = opendir(path)))
+	p = ft_strchr(buf, '/') ? DUG(buf, FUG(buf, '/') + 1) : ft_strdup("./");
+	if (!(dir = opendir(p)))
 	{
-		free(path);
+		free(p);
 		return (NULL);
 	}
+	flag = ft_strequ("./", p);
 	ret[0] = NULL;
 	while ((f = readdir(dir)))
 	{
 		if (f->d_name[0] == '.')
 			continue ;
-		ret[1] = status_quo(path, f->d_name);
+		ret[1] = status_quo(p, f->d_name, flag);
 		ret[1]->next = ret[0];
 		ret[0] = ret[1];
 	}
-	free(path);
+	free(p);
 	closedir(dir);
 	return (ret[0]);
 }
