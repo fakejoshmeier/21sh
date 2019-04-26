@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/22 17:40:17 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/23 00:55:33 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/25 22:58:03 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,16 @@ void	setshell(t_sh *sh)
 	sh->curr = NULL;
 }
 
-void	wipe_word(int len)
+void	enter_raw_mode(void)
 {
-	char		*tmp;
-	char		*tmp2;
-	char		buf[3];
+	struct termios	raw;
 
-	tmp = ft_itoa(len);
-	buf[0] = '\033';
-	buf[1] = '[';
-	buf[2] = '\0';
-	tmp2 = ft_strjoin(buf, tmp);
-	free(tmp);
-	tmp = ft_strjoin(tmp2, "D\033[J");
-	write(1, tmp, ft_strlen(tmp));
-	free(tmp);
-	free(tmp2);
+	tcgetattr(STDIN_FILENO, &raw);
+	raw.c_lflag &= ~(ECHO);
+	raw.c_lflag &= ~(ICANON);
+	raw.c_cc[VMIN] = 0;
+	raw.c_cc[VTIME] = 1;
+	tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 }
 
 t_list	*jm_lstnew(char *content, size_t content_size)
@@ -53,7 +47,7 @@ t_list	*jm_lstnew(char *content, size_t content_size)
 	return (ret);
 }
 
-t_list	*status_quo(char *path0, char *d_name)
+t_list	*status_quo(char *path0, char *d_name, int flag)
 {
 	char		*path;
 	struct stat	f_i;
@@ -61,7 +55,7 @@ t_list	*status_quo(char *path0, char *d_name)
 
 	path = ft_strjoin(path0, d_name);
 	stat(path, &f_i);
-	if (!ft_strequ(path0, "./"))
+	if (!flag)
 		ret = S_ISDIR(f_i.st_mode) ? ft_lstnew(ft_strcat(path, "/"),
 		LEN(path)) : ft_lstnew(path, LEN(path));
 	else
@@ -69,4 +63,29 @@ t_list	*status_quo(char *path0, char *d_name)
 		LEN(d_name)) : ft_lstnew(d_name, LEN(d_name));
 	free(path);
 	return (ret);
+}
+
+char	*chunk(char *str, size_t len)
+{
+	char	*tmp;
+	char	*chr;
+	char	*chr2;
+	int		flag;
+
+	if (!ft_strchr(str, '/'))
+		return (str);
+	flag = str[len - 1] == '/' ? 1 : 0;
+	tmp = str[len - 1] == '/' ? ft_strslice(str, 0, len - 1) : str;
+	chr = tmp;
+	while (chr)
+	{
+		chr2 = ft_strchr(chr, '/');
+		if (chr2)
+			chr = chr2 + 1;
+		else
+			break ;
+	}
+	if (flag)
+		free(tmp);
+	return (chr);
 }

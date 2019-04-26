@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/07 22:35:43 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/21 13:55:13 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/25 23:18:45 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void	trie_larson(t_map *trie, char *bin, size_t len)
 	new = (t_list *)malloc(sizeof(t_list));
 	new->content = ft_strdup(bin);
 	new->content_size = len;
-	new->next = (ptr = ft_map_remove(trie, (uint32_t)c)) ? ptr : NULL;
+	ptr = ft_map_remove(trie, (uint32_t)c);
+	new->next = ptr ? ptr : NULL;
 	ft_map_set(trie, (uint32_t)c, new);
 }
 

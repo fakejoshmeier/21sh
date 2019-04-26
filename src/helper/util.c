@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 13:52:13 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/19 16:48:02 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/25 22:58:15 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,6 @@ void	ignore(void)
 void	quit(void)
 {
 	g_running = FALSE;
-}
-
-void	enter_raw_mode(void)
-{
-	struct termios	raw;
-
-	tcgetattr(STDIN_FILENO, &raw);
-	raw.c_lflag &= ~(ECHO);
-	raw.c_lflag &= ~(ICANON);
-	raw.c_cc[VMIN] = 0;
-	raw.c_cc[VTIME] = 1;
-	tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 }
 
 char	**sanitize_av(char **av, int *ac)
