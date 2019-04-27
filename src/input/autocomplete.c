@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/25 23:55:52 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/26 20:07:03 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 {
 	char	*str;
+	t_list	*head;
 	t_list	*tmp;
-	t_list	*second;
 
 	str = list->content;
 	while (*str)
@@ -36,18 +36,17 @@ void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 	// 	handle_escape(line, );
 	else if (ft_isprint(in))
 		handle_write(line, in, 0);
-	tmp = list;
+	head = list;
 	list = list->next;
 	while (list)
 	{
-		if (list == tmp)
+		if (list == head)
 			break ;
-		second = list;
+		tmp = list;
 		list = list->next;
-		free(second->content);
-		free(second);
+		bin_helper(&tmp);
 	}
-	bin_helper(&tmp);
+	bin_helper(&head);
 }
 
 void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
@@ -56,7 +55,7 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 
 	c = '\0';
 	line->length = 0;
-	if (naughtocomplete)
+	if (naughtocomplete != NULL)
 		while (*naughtocomplete)
 			line_push(line, &(*naughtocomplete++));
 	write(STDOUT_FILENO, list->content, list->content_size);
@@ -159,7 +158,7 @@ int		autocomplete(t_line *line, t_sh *sh)
 	buf = buf ? buf + 1 : (char *)line->data;
 	naughtocomplete_len = ft_strlen((char *)line->data) - ft_strlen(buf);
 	bin = naughtocomplete_len ? directory_contents_to_ll(buf) :
-		ft_map_get(&sh->trie, (uint32_t)buf[0]);
+		(t_list *)ft_map_get(&sh->trie, (uint32_t)buf[0]);
 	bin2 = create_autocomplete_ll(buf, bin, naughtocomplete_len);
 	if (!bin2)
 		return (FALSE);
@@ -169,7 +168,7 @@ int		autocomplete(t_line *line, t_sh *sh)
 	else if (!naughtocomplete_len)
 		ft_printf("\033[%iD\033[J", line->length);
 	cycle(bin2, line, naughtocomplete, sh);
-	if (naughtocomplete_len)
+	if (naughtocomplete)
 		free(naughtocomplete);
 	return (TRUE);
 }
