@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/26 20:07:03 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/29 09:38:01 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,29 +80,29 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 {
 	char	*tmp;
 	int		len;
-	t_list	*ret;
-	t_list	*top;
+	t_list	*top[2];
 	t_list	*trash[2];
 
 	NULL_GUARD(bin);
 	tmp = ft_strchr(buf, '/') ? ft_strrchr(buf, '/') + 1 : buf;
 	len = ft_strlen(tmp);
-	top = NULL;
+	top[1] = NULL;
 	while (bin)
 	{
 		if (ft_strnequ(tmp, chunk(bin->content, bin->content_size), len))
 		{
-			ret = jm_lstnew(bin->content, bin->content_size);
-			ret->next = top;
-			trash[0] = !top ? ret : trash[0];
-			top = ret;
+			top[0] = jm_lstnew(bin->content, bin->content_size);
+			top[0]->next = top[1];
+			trash[0] = !top[1] ? top[0] : trash[0];
+			top[1] = top[0];
 		}
 		trash[1] = bin;
 		bin = bin->next;
 		flag ? bin_helper(&trash[1]) : 0;
+		trash[1] = NULL;
 	}
-	trash[0]->next = top;
-	return (top);
+	top[1] == NULL ? 0 : (trash[0]->next = top[1]);
+	return (top)[1];
 }
 
 /*
