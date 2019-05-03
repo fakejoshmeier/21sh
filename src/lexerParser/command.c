@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/08 16:11:09 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/03 15:40:43 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ void	command_parse(t_line *line, t_sh *sh)
 	char	**commands;
 	int		i;
 
+	if (!sh->history)
+		sh->history = hist_new((char *)line->data);
+	else
+		sh->history = hist_add(sh->history, (char *)line->data);
+	sh->curr = NULL;
 	commands = ft_strsplit((char *)line->data, ';');
 	i = -1;
 	while (commands[++i])

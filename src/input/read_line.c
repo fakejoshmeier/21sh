@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/02 22:02:48 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/03 15:49:05 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,23 @@
 
 void	handle_updown(t_line *line, t_sh *sh, char in)
 {
-	if (!sh->history)
+	if (!sh->history || (sh->curr && !sh->curr->next && in == 'A'))
 		return ;
-	if (in == 'B')
+	if (sh->curr && !sh->curr->prev && in == 'B')
 	{
-		if (!sh->curr->prev)
-			return (clear_line(line, NULL));
-		sh->curr = sh->curr->prev;
+		sh->curr = NULL;
+		line->length ? clear_line(line, NULL) : write(1, "\a", 1);
+		g_pos = 0;
+		return ;
 	}
-	else if (in == 'A')
-	{
-		if (!sh->curr->next)
-			return ;
+	if (!sh->curr && in == 'A')
+		sh->curr = sh->history;
+	else if (!sh->curr && in == 'B')
+		return ;
+	else if (sh->curr && in == 'A')
 		sh->curr = sh->curr->next;
-	}
-	line->length = 0;
+	else if (sh->curr && in == 'B')
+		sh->curr = sh->curr->prev;
 	clear_line(line, sh->curr->content);
 }
 

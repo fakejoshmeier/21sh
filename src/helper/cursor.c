@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 22:56:19 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/01 21:31:22 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/03 13:47:44 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	clear_line(t_line *line, char *new)
 
 	i = 0;
 	line->length = 0;
-	ft_printf("\033[%iD\033[0J", g_pos + 1);
+	g_pos > 0 ? ft_printf("\033[%iD\033[J", g_pos) : 0;
 	if (new)
 	{
 		while (new[i])
@@ -44,5 +44,6 @@ void	clear_line(t_line *line, char *new)
 			write(1, &new[i], 1);
 			line_push(line, &new[i++]);
 		}
+		g_pos = line->length;
 	}
 }

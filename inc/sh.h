@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/04/25 23:55:56 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/02 22:05:29 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ char				**map_to_array(t_map *map);
 void				setshell(t_sh *sh);
 void				bin_helper(t_list **list);
 void				wipe_word(int len);
+void				clear_line(t_line *line, char *to_push);
 t_list				*status_quo(char *path0, char *d_name, int flag);
 t_list				*jm_lstnew(char *content, size_t content_size);
 char				*chunk(char *str, size_t len);
@@ -99,7 +100,8 @@ void				get_av_ac(char *in, char ***av, int *ac, t_sh *sh);
 void				execute(char *cmd, char **av, t_sh *sh);
 int					check_executable(char *exe);
 int					autocomplete(t_line *line, t_sh *sh);
-void				handle_write(t_line *line, char in, int i);
+void				handle_write(t_line *line, char in, t_sh *sh);
+void				handle_escape(t_line *line, char in, t_sh *sh);
 char				*expand(char *in, t_sh *sh);
 
 void				b_echo(int ac, char **av, t_sh *sh);
