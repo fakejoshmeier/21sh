@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 19:25:36 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/25 23:17:38 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/04/29 10:23:15 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_hist	*hist_new(char *content)
 	ret->content = ft_strdup(content);
 	ret->next = NULL;
 	ret->prev = NULL;
+	return (ret);
 }
 
 t_hist	*hist_add(t_hist *hist, char *add)

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/29 09:38:01 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/02 21:59:05 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ void	handle_switch(t_line *line, t_list *list, char in, t_sh *sh)
 	str = list->content;
 	while (*str)
 		line_push(line, &(*str++));
-	if (in == sh->term_settings.c_cc[VERASE] && line->length)
-		handle_write(line, in, 1);
-	// else if ((int)in == 27)
-	// 	handle_escape(line, );
-	else if (ft_isprint(in))
-		handle_write(line, in, 0);
+	g_pos = line->length;
+	if ((int)in == 27)
+		handle_escape(line, in, sh);
+	else if ((in == sh->term_settings.c_cc[VERASE] && line->length) ||
+		ft_isprint(in))
+		handle_write(line, in, sh);
 	head = list;
 	list = list->next;
 	while (list)

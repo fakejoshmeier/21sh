@@ -3,16 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+         #
+#    By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/14 16:30:04 by jmeier            #+#    #+#              #
-#    Updated: 2019/03/22 22:31:42 by jmeier           ###   ########.fr        #
+#    Updated: 2019/05/02 11:11:55 by jmeier           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 21sh
 
-FUNC = main read_line t_line util command expand path autocomplete util2 cleanup \
+FUNC = main read_line t_line util command expand path autocomplete util2 \
+cleanup t_hist cursor \
 b_cd b_echo b_exit b_env b_setenv b_unsetenv
 
 VPATH = src:src/builtin:src/input:src/lexerParser:src/AST:src/helper
