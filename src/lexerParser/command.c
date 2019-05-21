@@ -3,34 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/03 15:40:43 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/20 19:07:20 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
-#include <errno.h>
+#include "lexer.h"
+
+/*
+** Lexer does not handle $ and ~ expansions.  Will handle in parser
+*/
 
 void	command_parse(t_line *line, t_sh *sh)
 {
-	char	**commands;
-	int		i;
+	t_list	*tokens;
+	t_list	*tmp;
+	t_tkn	*token;
 
 	if (!sh->history)
 		sh->history = hist_new((char *)line->data);
 	else
 		sh->history = hist_add(sh->history, (char *)line->data);
 	sh->curr = NULL;
-	commands = ft_strsplit((char *)line->data, ';');
-	i = -1;
-	while (commands[++i])
+	tokens = lexer((char *)line->data);
+	//Create an AST out of the lexer here
+	//Then run the command with the AST as input
+	while (tokens)
 	{
-		command_run(commands[i], sh);
-		free(commands[i]);
+		token = tokens->content;
+		ft_printf("Token: %s\nType: %i\n\n", token->val, token->type);
+		tmp = tokens;
+		tokens = tokens->next;
+		free(token->val);
+		free(token);
+		free(tmp);
 	}
-	free(commands);
 	line->length = 0;
 }
 
@@ -112,7 +122,6 @@ void	execute(char *cmd, char **av, t_sh *sh)
 		tcsetattr(STDIN_FILENO, TCSANOW, &sh->term_settings);
 		env = map_to_array(&sh->env);
 		execve(cmd, av, env);
-		printf("%s\n", strerror(errno));
 		ft_putendl("Failed to execute command");
 		free(av);
 		exit(1);
