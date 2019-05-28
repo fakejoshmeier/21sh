@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 00:30:28 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/20 19:03:02 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/23 20:00:30 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ int				lex_check3(char **line, t_lexer *lex);
 int				lex_check4(char **line, t_lexer *lex);
 int				lex_check5(char **line, t_lexer *lex);
 int				lex_check6(char **line, t_lexer *lex);
+int				lex_check7(char **line, t_lexer *lex);
+
 
 int				two_char_op(t_lexer *lex);
 

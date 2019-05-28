@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 13:02:54 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/20 19:25:31 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/23 20:03:58 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int		lex_check0(char **line, t_lexer *lex)
 {
 	if (**line == '\0')
 	{
-		write(1, "0", 1);
 		if (lex->tkn_start)
 			token_add(lex);
 		return (1);
@@ -47,12 +46,8 @@ int		lex_check1(char **line, t_lexer *lex)
 {
 	if (lex->tkn_type == OPERATOR)
 	{
-		write(1, "1", 1);
 		if (two_char_op(lex))
-		{
-			write(1, ":O", 2);
 			++(lex->tkn_len);
-		}
 		else
 		{
 			token_add(lex);
@@ -63,44 +58,24 @@ int		lex_check1(char **line, t_lexer *lex)
 	return (0);
 }
 
-/*
-** Same check as above but if this check passes, it makes the operator into a
-** token
-*/
-
-// int		lex_check2(char **line, t_lexer *lex)
-// {
-// 	if (lex->tkn_type == OPERATOR && !op_check(*lex))
-// 	{
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
-/*
-** Check for quotes.  Handles tokenizing entire quoted line
-*/
-
 int		lex_check2(char **line, t_lexer *lex)
 {
 	char	q;
 
 	if (**line == '"' || **line == '\'')
 	{
-		write(1, "2", 1);
+		q = **line;
 		if (!lex->tkn_start)
 		{
-			lex->tkn_start = *line;
+			lex->tkn_start = ++(*line);
 			lex->tkn_type = WORD;
 		}
-		q = **line;
-		++(lex->tkn_len);
 		while (**line)
 		{
 			++(*line);
 			++(lex->tkn_len);
 			if (**line == q)
-				break;
+				break ;
 		}
 		return (1);
 	}
@@ -121,7 +96,6 @@ int		lex_check3(char **line, t_lexer *lex)
 	if (op == '|' || op == ';' || op == '(' || op == ')' || op == '&'
 	|| op == '<' || op == '>' || op == '{' || op == '}' || op == '!')
 	{
-		write(1, "3", 1);
 		lex->tkn_type = OPERATOR;
 		lex->tkn_start = *line;
 		lex->tkn_len = 1;
@@ -129,49 +103,3 @@ int		lex_check3(char **line, t_lexer *lex)
 	}
 	return (0);
 }
-
-int		lex_check4(char **line, t_lexer *lex)
-{
-	if (ft_isspace(**line))
-	{
-		if (lex->tkn_start)
-			token_add(lex);
-		return (1);
-	}
-	return (0);
-}
-
-/*
-** Checks if the current token is a word and to just keep moving forward.
-*/
-
-int		lex_check5(char **line, t_lexer *lex)
-{
-	(void)line;
-	if (lex->tkn_type == WORD)
-	{
-		++(lex->tkn_len);
-		return (1);
-	}
-	return (0);
-}
-
-/*
-** If literally every other check has failed, then yes, this is a word.  I mean,
-** it's an operator or it's not
-*/
-
-int		lex_check6(char **line, t_lexer *lex)
-{
-	write(1, "6", 1);
-	lex->tkn_type = WORD;
-	lex->tkn_start = *line;
-	lex->tkn_len = 1;
-	return (1);
-}
-
-// int		lex_check7(char **line, t_lexer *lex)
-// {}
-
-// int		lex_check8(char **line, t_lexer *lex)
-// {}

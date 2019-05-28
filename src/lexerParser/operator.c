@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:30:19 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/20 19:31:33 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/23 12:40:03 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ int		two_char_op(t_lexer *lex)
 	ret = 0;
 	if (ft_strequ(tmp, ">>") || ft_strequ(tmp, "<<") || ft_strequ(tmp, ">&")
 	|| ft_strequ(tmp, "<&") || ft_strequ(tmp, "||") || ft_strequ(tmp, ">|")
-	|| ft_strequ(tmp, "<>") || ft_strequ(tmp, "<<-"))
+	|| ft_strequ(tmp, "<>") || ft_strequ(tmp, "&&") || ft_strequ(tmp, "<<-")
+	|| ft_strequ(tmp, ";;"))
 		ret = 1;
 	free(tmp);
 	tmp = NULL;

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/20 19:07:20 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/05/27 22:46:06 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 ** Lexer does not handle $ and ~ expansions.  Will handle in parser
 */
 
+//https://dev.to/oyagci/generating-a-parse-tree-from-a-shell-grammar-f1
 void	command_parse(t_line *line, t_sh *sh)
 {
 	t_list	*tokens;
-	t_list	*tmp;
 	t_tkn	*token;
+	t_list	*tmp;
 
 	if (!sh->history)
 		sh->history = hist_new((char *)line->data);
@@ -34,11 +35,11 @@ void	command_parse(t_line *line, t_sh *sh)
 	while (tokens)
 	{
 		token = tokens->content;
-		ft_printf("Token: %s\nType: %i\n\n", token->val, token->type);
+		ft_printf("Token: '%s'\nType: '%i'\n\n", token->val, token->type);
+		free(token->val);
 		tmp = tokens;
 		tokens = tokens->next;
-		free(token->val);
-		free(token);
+		free(tmp->content);
 		free(tmp);
 	}
 	line->length = 0;
