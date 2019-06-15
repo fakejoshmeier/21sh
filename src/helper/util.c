@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 13:52:13 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/25 22:58:15 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/14 23:17:32 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,25 @@
 extern volatile	sig_atomic_t g_running;
 extern volatile	sig_atomic_t g_clear;
 
-void	signal_handler(int signal, void (*handler))
+void	signal_handler(void)
 {
-	struct sigaction	action;
+	struct sigaction	action1;
+	struct sigaction	action2;
+	struct sigaction	action3;
+	void				(*act);
+	void				(*act1);
 
-	action = (struct sigaction){.sa_handler = handler, .sa_flags = 0};
-	sigemptyset(&action.sa_mask);
-	sigaction(signal, &action, NULL);
+	act = quit;
+	action1 = (struct sigaction){.sa_handler = act, .sa_flags = 0};
+	sigemptyset(&action1.sa_mask);
+	sigaction(SIGTERM, &action1, NULL);
+	action2 = (struct sigaction){.sa_handler = act, .sa_flags = 0};
+	sigemptyset(&action2.sa_mask);
+	sigaction(SIGQUIT, &action2, NULL);
+	act1 = ignore;
+	action3 = (struct sigaction){.sa_handler = act1, .sa_flags = 0};
+	sigemptyset(&action3.sa_mask);
+	sigaction(SIGINT, &action3, NULL);
 }
 
 void	ignore(void)

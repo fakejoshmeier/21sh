@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 13:02:54 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/23 20:03:58 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/05 20:21:46 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int		lex_check3(char **line, t_lexer *lex)
 	if (op == '|' || op == ';' || op == '(' || op == ')' || op == '&'
 	|| op == '<' || op == '>' || op == '{' || op == '}' || op == '!')
 	{
+		if (lex->tkn_start)
+			token_add(lex);
 		lex->tkn_type = OPERATOR;
 		lex->tkn_start = *line;
 		lex->tkn_len = 1;

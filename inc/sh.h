@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sh.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/05/02 22:05:29 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/14 22:50:58 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_hist				*hist_new(char *content);
 t_hist				*hist_add(t_hist *hist, char *add);
 void				hist_del(t_hist *hist);
 
-void				signal_handler(int signal, void (*handler));
+void				signal_handler(void);
 void				ignore(void);
 void				quit(void);
 char				**sanitize_av(char **av, int *ac);

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:30:19 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/23 12:40:03 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/15 10:02:59 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,37 @@ int		two_char_op(t_lexer *lex)
 	free(tmp);
 	tmp = NULL;
 	return (ret);
+}
+
+int		op_parse(char *token)
+{
+	int			i;
+	static char	*ops[22] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+	"0", "1", "&&", "||", ";;", "<<", ">>", "<&", ">& ", "<>", "<<-", "|<" };
+
+	i = 11;
+	if (ft_strequ("|", token))
+		return (PIPE);
+	while (++i < 22)
+	{
+		if (ft_strequ(ops[i], token))
+			return (i);
+	}
+	return (-1);
+}
+
+int		reserved_word(char *val)
+{
+	int			i;
+	static char	*r_words[12] = { "if", "then", "else", "elif", "fi", "do", 
+	"done", "case", "esac", "while", "until", "for" };
+
+	i = 0;
+	while (i < 12)
+	{
+		if (ft_strequ(r_words[i], val))
+			return (i + 22);
+		++i;
+	}
+	return (-1);
 }

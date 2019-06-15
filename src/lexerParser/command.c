@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/27 22:46:06 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/15 10:02:57 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,42 @@
 #include "lexer.h"
 
 /*
-** Lexer does not handle $ and ~ expansions.  Will handle in parser
+** Adds command to history, even in the case of invalid commands, as zsh does.
+** After command is added, the input is separated into tokens, then the word
+** tokens are stored into separate arrays, separated by their operators.
+** If there are parse errors, the execution stops and everything should be
+** cleaned up.  For redirections, pipes, and other things that require
+** two processes, there is a specialized execution set, otherwise it all
+** continues as did before.
 */
 
 //https://dev.to/oyagci/generating-a-parse-tree-from-a-shell-grammar-f1
 void	command_parse(t_line *line, t_sh *sh)
 {
-	t_list	*tokens;
+	t_list	*tokens[2];
 	t_tkn	*token;
-	t_list	*tmp;
+	t_ast	*ast[2];
 
-	if (!sh->history)
-		sh->history = hist_new((char *)line->data);
-	else
-		sh->history = hist_add(sh->history, (char *)line->data);
+	sh->history = !sh->history ? hist_new((char *)line->data) :
+		hist_add(sh->history, (char *)line->data);
 	sh->curr = NULL;
-	tokens = lexer((char *)line->data);
-	//Create an AST out of the lexer here
-	//Then run the command with the AST as input
-	while (tokens)
-	{
-		token = tokens->content;
-		ft_printf("Token: '%s'\nType: '%i'\n\n", token->val, token->type);
-		free(token->val);
-		tmp = tokens;
-		tokens = tokens->next;
-		free(tmp->content);
-		free(tmp);
-	}
+	tokens[1] = lexer((char *)line->data);
 	line->length = 0;
+	tokens[0] = tokens[1];
+	ast[1] = (t_ast *)ft_memalloc(sizeof(t_ast));
+	ast[0] = ast[1];
+	while (tokens[1])
+	{
+		token = tokens[1]->content;
+		if (!(ast[1] = sh_parse(ast[1], token, sh)))
+		{
+			ast_token_clean(ast[0], tokens[0]);
+			return ;
+		}
+		tokens[1] = tokens[1]->next;
+	}
+	// ast_exec(ast[0], sh);
+	ast_token_clean(ast[0], tokens[0]);
 }
 
 /*
@@ -77,10 +84,6 @@ void	command_run(char *input, t_sh *sh)
 		free(av[i++]);
 	free(av);
 }
-
-/*
-** Admittedly imperfect.  ac gets larger due to closing quotes.
-*/
 
 void	get_av_ac(char *x, char ***av, int *ac, t_sh *sh)
 {
