@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 08:50:21 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/12 02:37:25 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/15 10:03:12 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,7 @@ int		main(void)
 	enter_raw_mode();
 	getcwd(sh.cwd, MAXPATHLEN);
 	getcwd(sh.old, MAXPATHLEN);
-	signal_handler(SIGTERM, quit);
-	signal_handler(SIGQUIT, quit);
-	signal_handler(SIGINT, ignore);
+	// signal_handler();
 	trie_hugger(&sh);
 	hash_slinging_slasher(&sh);
 	line = init_line(1);
@@ -132,7 +130,10 @@ int		main(void)
 			continue ;
 		line->length > 1 ? command_parse(line, &sh) : (line->length = 0);
 		if (g_running)
+		{
 			prompt(&sh);
+			// break;
+		}
 	}
 	free(line->data);
 	free(line);

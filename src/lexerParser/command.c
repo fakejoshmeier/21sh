@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/06/15 10:02:57 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/20 00:45:35 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,70 +48,55 @@ void	command_parse(t_line *line, t_sh *sh)
 		}
 		tokens[1] = tokens[1]->next;
 	}
-	// ast_exec(ast[0], sh);
+	ast_command(ast[0], sh);
 	ast_token_clean(ast[0], tokens[0]);
+}
+
+t_ast	*pipe(t_ast *ast, t_ast *down, t_sh *sh)
+{
+	char	*sys[2];
+	int		checks[2];
+
+	checks[0] = check_executable(ast->next->arr[0]);
+	
 }
 
 /*
 ** The first call checks for compiled executables, eg this.
 ** The second call is builtin functions
 ** The final call is system functions like ls.
+** Check for if ast->down->curr is pipe or redirect
 */
 
-void	command_run(char *input, t_sh *sh)
+
+//http://www.sarathlakshman.com/2012/09/24/implementation-overview-of-redirection-and-pipe-operators-in-shell
+
+void	ast_command(t_ast *ast, t_sh *sh)
 {
 	t_fptr	b_in;
-	char	**av;
 	char	*sys;
-	int		ac;
-	int		i;
 
-	ac = 1;
-	get_av_ac(input, &av, &ac, sh);
-	av = sanitize_av(av, &ac);
-	ft_strtolower(&av[0]);
-	if (check_executable(av[0]))
-		execute(av[0], av, sh);
-	else if ((b_in = ft_map_get(&sh->builtin,
-		ft_map_hash(&sh->builtin, av[0]))))
-		b_in(ac, av, sh);
-	else if ((sys = ft_map_get(&sh->path, ft_map_hash(&sh->path, av[0]))))
-		execute(sys, av, sh);
-	else
-		ft_printf(BLU"jo.sh"RES": command not found: %s\n", av[0]);
-	i = 0;
-	while (i < ac)
-		free(av[i++]);
-	free(av);
-}
-
-void	get_av_ac(char *x, char ***av, int *ac, t_sh *sh)
-{
-	int		flag;
-	int		len;
-	int		i;
-	int		j;
-
-	i = -1;
-	flag = -1;
-	len = ft_strlen(x);
-	while (++i < len)
+	while (ast)
 	{
-		flag = x[i] == '"' ? flag * -1 : flag;
-		flag == -1 && (ft_isspace(x[i]) || x[i] == '"') ? ++*ac : 0;
-		if (flag == -1 && (ft_isspace(x[i]) || x[i] == '"'))
-			x[i] = '\0';
-	}
-	*av = (char **)ft_memalloc(sizeof(char *) * *ac);
-	i = -1;
-	j = -1;
-	while (++i < *ac && flag == -1 && ++j < len)
-		if (x[j])
+		if (ast->down->curr == PIPE || ast->down->curr == REDIRECT)
 		{
-			(*av)[i] = x[j] == '"' ? ft_strdup(x + j + 1) : expand(x + j, sh);
-			while (x[j])
-				++j;
+			ast = ast->down->curr == PIPE ? pipe(ast, ast->down, sh) :
+			redirect();
+			continue ;
 		}
+		if (check_executable(ast->next->arr[0]))
+			execute(ast->next->arr[0], ast->next->arr, sh);
+		else if ((b_in = ft_map_get(&sh->builtin,
+			ft_map_hash(&sh->builtin, ast->next->arr[0]))))
+			b_in(ast->next->size, ast->next->arr, sh);
+		else if ((sys = ft_map_get(&sh->path, ft_map_hash(&sh->path,
+			ast->next->arr[0]))))
+			execute(sys, ast->next->arr, sh);
+		else
+			ft_printf(BLU"jo.sh"RES": command not found: %s\n",
+			ast->next->arr[0]);
+		ast = ast->down;
+	}
 }
 
 void	execute(char *cmd, char **av, t_sh *sh)

@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   read_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
+/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/03 15:49:05 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/02 19:08:59 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
+
+/*
+** HOME and END are \033[H and \033[F respectively
+*/ 
 
 void	handle_updown(t_line *line, t_sh *sh, char in)
 {
@@ -91,6 +95,7 @@ void	handle_escape(t_line *line, char in, t_sh *sh)
 			--g_pos;
 		}
 	}
+//	more_escapes(line, in, sh);
 }
 
 void	handle_write(t_line *line, char in, t_sh *sh)
