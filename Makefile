@@ -6,16 +6,17 @@
 #    By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/14 16:30:04 by jmeier            #+#    #+#              #
-#    Updated: 2019/05/20 19:02:38 by jmeier           ###   ########.fr        #
+#    Updated: 2019/06/02 19:08:58 by jmeier           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 21sh
 
-FUNC = main read_line t_line util command expand path autocomplete util2 \
-cleanup t_hist cursor \
-b_cd b_echo b_exit b_env b_setenv b_unsetenv \
-lex_main lex_check operator
+FUNC = main \
+read_line autocomplete cursor \
+lex_main lex_check lex_check2 parse_main operator command expand operator \
+util cleanup t_line t_hist path util2 \
+b_cd b_echo b_exit b_env b_setenv b_unsetenv
 
 VPATH = src:src/builtin:src/input:src/lexerParser:src/AST:src/helper
 C_SRC = $(addsuffix, $(FUNC))
