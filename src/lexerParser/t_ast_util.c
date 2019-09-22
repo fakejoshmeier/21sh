@@ -27,8 +27,9 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 {
 	t_ast	*new;
 	t_tkn	*tmp;
+	t_tkn	*ret;
 
-	if (!(*token))
+	if (!(*token) || (*token)->type == 404)
 		return (NULL);
 	new = ft_memalloc(sizeof(t_ast));
 	new->parent = NULL;
@@ -37,16 +38,23 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	new->type = (*token)->type;
 	new->op_type = (*token)->op_type;
 	new->token = *token;
-	new->end = *token;
-	tmp = (*token)->next;
-	while (tmp->next && tmp->type != delim)
-		tmp = tmp->next;
-	*token = tmp;
+	ft_printf("TOKEN - %s\nTYPE - %i\nOPERATION - %i\n\n", new->token->val, new->type, new->op_type);
+	ret = *token;
+	while (ret->next && ret->type != delim)
+	{
+		tmp = ret;
+		ret = tmp->next;
+	}
+	ft_printf("TOKEN - %s\nTYPE - %i\nOPERATION - %i\n-----------------------------\n", ret->val, ret->type, ret->op_type);
+	*token = ret;
+	tmp->next = NULL;
 	return (new);
 }
 
 t_ast	*create_node(t_ast *left, t_ast *node, t_ast *right)
 {
+	if (!node)
+		return (left);
 	node->left = left;
 	node->right = right;
 	if (left)

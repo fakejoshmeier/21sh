@@ -23,7 +23,7 @@ int		next_op(t_tkn *token, int op)
 {
 	t_tkn	*tmp;
 
-	tmp = token;
+	tmp = token->next;
 	while (tmp)
 	{
 		if (tmp->op_type == op)
@@ -103,8 +103,11 @@ t_ast	*create_ast(t_tkn **token)
 				create_list(token));
 		}
 		else
+		{
+			ft_printf("WOOP, THERE IT IS\n");
 			root = create_node(root, create_leaf(token, WORD),
 			create_list(token));
+		}
 	}
 	return (root);
 }

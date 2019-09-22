@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:30:19 by jmeier            #+#    #+#             */
-/*   Updated: 2019/06/15 10:02:59 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/17 16:41:16 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,10 @@ int		two_char_op(t_lexer *lex)
 	int		ret;
 
 	tmp = ft_strndup(lex->tkn_start, lex->tkn_len + 1);
-	ret = 0;
-	if (ft_strequ(tmp, ">>") || ft_strequ(tmp, "<<") || ft_strequ(tmp, ">&")
-	|| ft_strequ(tmp, "<&") || ft_strequ(tmp, "||") || ft_strequ(tmp, ">|")
-	|| ft_strequ(tmp, "<>") || ft_strequ(tmp, "&&") || ft_strequ(tmp, "<<-")
-	|| ft_strequ(tmp, ";;"))
-		ret = 1;
+	ret = op_parse(tmp);
 	free(tmp);
 	tmp = NULL;
-	return (ret);
+	return (ret == -1 ? 0 : 1);
 }
 
 int		op_parse(char *token)
@@ -60,6 +55,8 @@ int		op_parse(char *token)
 	i = 11;
 	if (ft_strequ("|", token))
 		return (PIPE);
+	else if (ft_strequ("&", token) || ft_strequ(";", token))
+		return (SEPARATOR);
 	while (++i < 22)
 	{
 		if (ft_strequ(ops[i], token))
@@ -81,5 +78,5 @@ int		reserved_word(char *val)
 			return (i + 22);
 		++i;
 	}
-	return (-1);
+	return (WORD);
 }

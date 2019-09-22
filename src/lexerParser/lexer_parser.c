@@ -1,0 +1,91 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_parser.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
+/*   Updated: 2019/09/17 21:00:46 by jmeier           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "sh.h"
+#include "lexer.h"
+
+/*
+** Adds command to history, even in the case of invalid commands, as zsh does.
+** After command is added, the input is separated into tokens, then the word
+** tokens are stored into separate arrays, separated by their operators.
+** If there are parse errors, the execution stops and everything should be
+** cleaned up.  For redirections, pipes, and other things that require
+** two processes, there is a specialized execution set, otherwise it all
+** continues as did before.
+*/
+
+//https://dev.to/oyagci/generating-a-parse-tree-from-a-shell-grammar-f1
+
+void	ft_padding(int padd)
+{
+	int	i;
+
+	i = 0;
+	while (++i < padd)
+		write(1, "\t", 1);
+}
+
+void	ft_print_node(t_ast *ast, char *side, int lvl)
+{
+	t_tkn *tmp;
+
+	ft_padding(lvl);
+	ft_putstr("** ");
+	ft_putstr(side);
+	ft_putnbr(lvl);
+	ft_putendl(" **");
+	ft_padding(lvl);
+	tmp = ast->token;
+	ft_putstr(MAG);
+	while (tmp)
+	{
+		ft_putstr(tmp->val);
+		ft_putstr(" ");
+		tmp = tmp->next;
+	}
+	ft_putendl(RES);
+	ft_padding(lvl);
+	ft_putendl("************");
+}
+
+void	ft_print_ast(t_ast *ast, char *side, int lvl)
+{
+	if (lvl == 0)
+		ft_putendl(MAG"________________ AST ________________"RES);
+	if (!ast)
+		return ;
+	if (ast->left)
+		ft_print_ast(ast->left, "left", ++lvl);
+	else
+		++lvl;
+	ft_print_node(ast, side, lvl);
+	if (ast->right)
+		ft_print_ast(ast->right, "right", lvl--);
+	else
+		--lvl;
+	if (lvl == 0)
+		ft_putendl(MAG"_____________________________________"RES);
+}
+
+void	lexer_parser(t_line *line, t_sh *sh)
+{
+	t_tkn	*tokens;
+	t_ast	*ast;
+
+	sh->history = !sh->history ? hist_new((char *)line->data) :
+		hist_add(sh->history, (char *)line->data);
+	sh->curr = NULL;
+	tokens = lexer((char *)line->data);
+	line->length = 0;
+	ast = create_ast(&tokens);
+	ft_print_ast(ast, "head", 0);
+}

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 09:47:49 by jmeier            #+#    #+#             */
-/*   Updated: 2019/06/15 10:02:56 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/06/25 20:15:09 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_arr	*add_arg(t_arr *args, char *s, t_sh *sh)
 		free(args);
 	}
 	++(ret->size);
+	ret->arr[ret->size] = 0;
 	return (ret);
 }
 

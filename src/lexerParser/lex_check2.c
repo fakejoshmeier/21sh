@@ -42,7 +42,7 @@ int		lex_check4(char **line, t_lexer *lex)
 }
 
 /*
-** Blank space, baby.
+** I've got a blank space, baby.  And I'll write your name
 */
 
 int		lex_check5(char **line, t_lexer *lex)
@@ -73,7 +73,7 @@ int		lex_check6(char **line, t_lexer *lex)
 
 /*
 ** If literally every other check has failed, then yes, this is a word.  I mean,
-** it's an operator or it's not
+** c'mon, it's an operator or it's not.
 */
 
 int		lex_check7(char **line, t_lexer *lex)

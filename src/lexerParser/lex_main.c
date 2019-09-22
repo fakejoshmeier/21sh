@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:55:10 by jmeier            #+#    #+#             */
-/*   Updated: 2019/06/15 08:04:50 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/17 18:19:57 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,17 @@ void	token_add(t_lexer *lex)
 	token->val = ft_strndup(lex->tkn_start, lex->tkn_len);
 	token->len = lex->tkn_len;
 	token->type = lex->tkn_type;
+	token->op_type = token->type == WORD ? reserved_word(token->val) :
+		op_parse(token->val);
+	token->next = NULL;
 	if (!lex->start)
 	{
-		lex->start = ft_lstset(token, sizeof(t_tkn));
+		lex->start = token;
 		lex->end = lex->start;
 	}
 	else
 	{
-		lex->end->next = ft_lstset(token, sizeof(t_tkn));
+		lex->end->next = token;
 		lex->end = lex->end->next;
 	}
 	lex->tkn_start = NULL;
@@ -55,9 +58,10 @@ int		token_split(char **line, t_lexer *lex)
 	return (0);
 }
 
-t_list	*lexer(char *line)
+t_tkn	*lexer(char *line)
 {
 	t_lexer	lex;
+	t_tkn	*cap;
 
 	lex.tkn_start = line;
 	lex.tkn_len = 0;
@@ -71,5 +75,12 @@ t_list	*lexer(char *line)
 	}
 	if (lex.tkn_start)
 		token_add(&lex);
+	cap = (t_tkn *)malloc(sizeof(t_tkn));
+	cap->val = ft_strndup("\n", 1);
+	cap->len = 1;
+	cap->type = 404;
+	cap->op_type = 404;
+	cap->next = NULL;
+	lex.end->next = cap;
 	return (lex.start);
 }
