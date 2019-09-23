@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 13:46:45 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/22 18:47:02 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/22 18:54:24 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,7 @@ int		is_op(char *data, int i)
 		else if (data[i] == ';' || data[i] == '|')
 			return (1);
 		else if (data[i] == '&')
-		{
-			if (data[i - 1] == '<' || data[i - 1] == '>')
-				return (0);
-			else
-				return (1);
-		}
+			return ((data[i - 1] == '<' || data[i - 1] == '>') ? 0 : 1);
 	}
 	return (0);
 }
