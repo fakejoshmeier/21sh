@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/19 11:53:30 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/02 21:59:05 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/22 18:38:01 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	cycle(t_list *list, t_line *line, char *naughtocomplete, t_sh *sh)
 	handle_switch(line, list, c, sh);
 }
 
-t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
+t_list	*create_ac_ll(char *buf, t_list *bin, int flag)
 {
 	char	*tmp;
 	int		len;
@@ -109,7 +109,7 @@ t_list	*create_autocomplete_ll(char *buf, t_list *bin, int flag)
 ** Gross ass macros to beat the norme's line limits
 */
 
-t_list	*directory_contents_to_ll(char *buf)
+t_list	*dir_into_ll(char *buf)
 {
 	struct dirent	*f;
 	DIR				*dir;
@@ -141,7 +141,8 @@ t_list	*directory_contents_to_ll(char *buf)
 /*
 ** I have a trie for all the possible programs in the PATH, but if the input
 ** is not a PATH command, I can rip the dir and get the list of stuff in the
-** directory
+** directory.
+** For the buf, it has to be all of the operators, then spaces between words
 */
 
 int		autocomplete(t_line *line, t_sh *sh)
@@ -150,22 +151,22 @@ int		autocomplete(t_line *line, t_sh *sh)
 	t_list	*bin2;
 	char	*buf;
 	char	*naughtocomplete;
-	int		naughtocomplete_len;
+	int		nc_len;
 
 	line_push(line, "\0");
 	--line->length;
-	buf = ft_strrchr((char *)line->data, ' ');
+	buf = last_piece((char *)line->data);
 	buf = buf ? buf + 1 : (char *)line->data;
-	naughtocomplete_len = ft_strlen((char *)line->data) - ft_strlen(buf);
-	bin = naughtocomplete_len ? directory_contents_to_ll(buf) :
-		(t_list *)ft_map_get(&sh->trie, (uint32_t)buf[0]);
-	bin2 = create_autocomplete_ll(buf, bin, naughtocomplete_len);
+	nc_len = ft_strlen((char *)line->data) - ft_strlen(buf);
+	bin = nc_len && !is_op((char *)line->data, nc_len)
+		? dir_into_ll(buf) : (t_list *)ft_map_get(&sh->trie, (uint32_t)buf[0]);
+	bin2 = create_ac_ll(buf, bin, nc_len && !is_op((char *)line->data, nc_len));
 	if (!bin2)
 		return (FALSE);
-	naughtocomplete = ft_strndup((char *)line->data, naughtocomplete_len);
-	if (naughtocomplete_len && ft_strlen(buf))
+	naughtocomplete = ft_strndup((char *)line->data, nc_len);
+	if (nc_len && ft_strlen(buf))
 		ft_printf("\033[%iD\033[J%s", line->length, naughtocomplete);
-	else if (!naughtocomplete_len)
+	else if (!nc_len)
 		ft_printf("\033[%iD\033[J", line->length);
 	cycle(bin2, line, naughtocomplete, sh);
 	if (naughtocomplete)
