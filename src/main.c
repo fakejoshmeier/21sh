@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 08:50:21 by jmeier            #+#    #+#             */
-/*   Updated: 2019/06/15 10:03:12 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/22 13:46:15 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,13 +128,12 @@ int		main(void)
 	{
 		if ((!read_line(line, &sh)) && !handle_clear(line))
 			continue ;
-		line->length > 1 ? command_parse(line, &sh) : (line->length = 0);
+		line->length > 1 ? lexer_parser(line, &sh) : (line->length = 0);
 		if (g_running)
-		{
 			prompt(&sh);
-			// break;
-		}
 	}
+	// Make a cleanup function, dammit!
+	// clean_up(&sh);
 	free(line->data);
 	free(line);
 	return (0);
