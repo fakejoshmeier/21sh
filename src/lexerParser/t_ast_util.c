@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/27 16:29:04 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/17 21:01:55 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/22 20:58:45 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 /*
 ** On a given leaf, rip out chunks of the linked list that is my tokens list.
 */
-
 
 t_ast	*create_leaf(t_tkn **token, int delim)
 {
@@ -38,14 +37,12 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	new->type = (*token)->type;
 	new->op_type = (*token)->op_type;
 	new->token = *token;
-	ft_printf("TOKEN - %s\nTYPE - %i\nOPERATION - %i\n\n", new->token->val, new->type, new->op_type);
 	ret = *token;
 	while (ret->next && ret->type != delim)
 	{
 		tmp = ret;
 		ret = tmp->next;
 	}
-	ft_printf("TOKEN - %s\nTYPE - %i\nOPERATION - %i\n-----------------------------\n", ret->val, ret->type, ret->op_type);
 	*token = ret;
 	tmp->next = NULL;
 	return (new);
@@ -70,6 +67,7 @@ void	ast_del(t_ast **ast)
 		return ;
 	ast_del(&(*ast)->left);
 	ast_del(&(*ast)->right);
+	free((*ast)->token->val);
 	free((*ast)->token);
 	free(*ast);
 	*ast = NULL;

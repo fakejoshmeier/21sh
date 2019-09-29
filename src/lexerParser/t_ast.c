@@ -104,7 +104,6 @@ t_ast	*create_ast(t_tkn **token)
 		}
 		else
 		{
-			ft_printf("WOOP, THERE IT IS\n");
 			root = create_node(root, create_leaf(token, WORD),
 			create_list(token));
 		}

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/17 21:00:46 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/24 17:37:53 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,55 +25,47 @@
 
 //https://dev.to/oyagci/generating-a-parse-tree-from-a-shell-grammar-f1
 
-void	ft_padding(int padd)
-{
-	int	i;
+/*
+** Follow shell grammar hierarchy
+*/
 
-	i = 0;
-	while (++i < padd)
-		write(1, "\t", 1);
+int		exec_separator(t_ast *ast)
+{
+	ast_redirect(ast->left);
+	return (ast_redirect(ast->right));
 }
 
-void	ft_print_node(t_ast *ast, char *side, int lvl)
+int		exec_andif(t_ast *ast)
 {
-	t_tkn *tmp;
-
-	ft_padding(lvl);
-	ft_putstr("** ");
-	ft_putstr(side);
-	ft_putnbr(lvl);
-	ft_putendl(" **");
-	ft_padding(lvl);
-	tmp = ast->token;
-	ft_putstr(MAG);
-	while (tmp)
-	{
-		ft_putstr(tmp->val);
-		ft_putstr(" ");
-		tmp = tmp->next;
-	}
-	ft_putendl(RES);
-	ft_padding(lvl);
-	ft_putendl("************");
+	if (ast_redirect(ast->left))
+		return (ast_redirect(ast->right));
+	else
+		return (1);
 }
 
-void	ft_print_ast(t_ast *ast, char *side, int lvl)
+int		exec_orif(t_ast *ast)
 {
-	if (lvl == 0)
-		ft_putendl(MAG"________________ AST ________________"RES);
+	if (ast_redirect(ast->left))
+		return (1);
+	else
+		return (ast_redirect(ast->right));
+}
+
+int		ast_redirect(t_ast *ast, t_sh *sh)
+{
 	if (!ast)
-		return ;
-	if (ast->left)
-		ft_print_ast(ast->left, "left", ++lvl);
-	else
-		++lvl;
-	ft_print_node(ast, side, lvl);
-	if (ast->right)
-		ft_print_ast(ast->right, "right", lvl--);
-	else
-		--lvl;
-	if (lvl == 0)
-		ft_putendl(MAG"_____________________________________"RES);
+		return (0);
+	if (ast->op_type == SEPARATOR)
+		return (exec_separator(ast));
+	else if (ast->op_type == ANDIF)
+		return (exec_andif(ast));
+	else if (ast->op_type == ORIF)
+		return (exec_orif(ast));
+	else if (ast->op_type == PIPE)
+		return (exec_pipe(ast));
+	else if (ast->type != OPERATOR)
+		return (exec_command(ast));
+	return (1);
 }
 
 void	lexer_parser(t_line *line, t_sh *sh)
@@ -84,8 +76,11 @@ void	lexer_parser(t_line *line, t_sh *sh)
 	sh->history = !sh->history ? hist_new((char *)line->data) :
 		hist_add(sh->history, (char *)line->data);
 	sh->curr = NULL;
+	// tokens = lexer(expand((char *)line->data, sh));
 	tokens = lexer((char *)line->data);
 	line->length = 0;
 	ast = create_ast(&tokens);
-	ft_print_ast(ast, "head", 0);
+	ast_redirect(ast, sh);
+	if (!ast)
+		ast_del(&ast);
 }
