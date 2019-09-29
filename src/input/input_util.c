@@ -6,11 +6,24 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 13:46:45 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/22 18:54:24 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/22 22:11:19 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
+
+void	bin_helper(t_list **list)
+{
+	t_list	*tmp;
+
+	if (!list || !(*list))
+		return ;
+	tmp = *list;
+	free(tmp->content);
+	tmp->content = NULL;
+	free(tmp);
+	tmp = NULL;
+}
 
 char	*last_piece(char *data)
 {
