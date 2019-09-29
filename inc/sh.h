@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/06/14 22:50:58 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/22 20:51:52 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <sys/param.h>
+# include <unistd.h>
 # include <libgen.h>
 
 # define ENVIRON extern char **environ
@@ -93,16 +94,14 @@ t_list				*status_quo(char *path0, char *d_name, int flag);
 t_list				*jm_lstnew(char *content, size_t content_size);
 char				*chunk(char *str, size_t len);
 
-void				update_path(t_sh *sh);
-void				command_parse(t_line *line, t_sh *sh);
-void				command_run(char *input, t_sh *sh);
-void				get_av_ac(char *in, char ***av, int *ac, t_sh *sh);
-void				execute(char *cmd, char **av, t_sh *sh);
-int					check_executable(char *exe);
 int					autocomplete(t_line *line, t_sh *sh);
 void				handle_write(t_line *line, char in, t_sh *sh);
 void				handle_escape(t_line *line, char in, t_sh *sh);
-char				*expand(char *in, t_sh *sh);
+char				*last_piece(char *data);
+int					is_op(char *data, int i);
+
+void				update_path(t_sh *sh);
+void				lexer_parser(t_line *line, t_sh *sh);
 
 void				b_echo(int ac, char **av, t_sh *sh);
 void				b_cd(int ac, char **av, t_sh *sh);
