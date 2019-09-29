@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/07 22:35:43 by jmeier            #+#    #+#             */
-/*   Updated: 2019/04/25 23:18:45 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/09/22 13:46:17 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	hashout_bin(t_map *m_p, struct dirent *f, char *content)
 }
 
 /*
-** I should be shot for this joke alone
+** I should be shot for this joke
 */
 
 void	trie_larson(t_map *trie, char *bin, size_t len)
