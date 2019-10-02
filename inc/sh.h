@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/10/01 15:50:23 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:48:17 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct		s_line
 	size_t			width;
 }					t_line;
 
-typedef struct 		s_hist
+typedef struct		s_hist
 {
 	char			*content;
 	struct s_hist	*next;
