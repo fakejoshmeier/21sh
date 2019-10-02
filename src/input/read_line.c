@@ -6,15 +6,11 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 19:43:02 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 22:02:28 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
-
-/*
-** HOME and END are \033[H and \033[F respectively
-*/
 
 void	handle_updown(t_line *line, t_sh *sh, char in)
 {
@@ -69,33 +65,36 @@ void	do_a_thing(t_line *line, char in, t_sh *sh)
 	ft_printf("\033[%iD", line->length - g_pos);
 }
 
+/*
+** HOME key is H and END is F
+*/
+
 void	handle_escape(t_line *line, char in, t_sh *sh)
 {
 	read(STDIN_FILENO, &in, 1);
 	in != '[' ? write(1, "\a", 1) : read(STDIN_FILENO, &in, 1);
 	if (in == 'A' || in == 'B')
 		handle_updown(line, sh, in);
-	else if (in == 'C')
+	else if (in == 'C' || in == 'F')
 	{
 		if (g_pos + 1 >= (int)line->length + 1)
 			write(1, "\a", 1);
 		else
 		{
-			ft_printf("\033[%c", in);
-			++g_pos;
+			ft_printf("\033[%iC", in == 'C' ? 0 : line->length - g_pos);
+			g_pos = in == 'C' ? g_pos + 1 : (int)line->length;
 		}
 	}
-	else if (in == 'D')
+	else if (in == 'D' || in == 'H')
 	{
 		if (g_pos - 1 < 0)
 			write(1, "\a", 1);
 		else
 		{
-			ft_printf("\033[%c", in);
-			--g_pos;
+			ft_printf("\033[%iD", in == 'D' ? 0 : g_pos);
+			g_pos = in == 'D' ? g_pos - 1 : 0;
 		}
 	}
-//	more_escapes(line, in, sh);
 }
 
 void	handle_write(t_line *line, char in, t_sh *sh)
