@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:38:55 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 19:26:42 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:45:55 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 ** The first call checks for compiled executables, eg this.
 ** The second call is builtin functions
 ** The final call is system functions like ls.
-** 
+**
 ** Great resource: http://www.sarathlakshman.com/2012/09/24/implementation-
 ** overview-of-redirection-and-pipe-operators-in-shell
 */
 
-char	**token_to_array(t_tkn *token)
+static char	**token_to_array(t_tkn *token)
 {
 	char	**ret;
 	t_tkn	*tmp;
@@ -48,12 +48,12 @@ char	**token_to_array(t_tkn *token)
 	return (ret);
 }
 
-int		exec_command(t_ast *ast, t_sh *s)
+int			exec_command(t_ast *ast, t_sh *s)
 {
 	t_fptr	b_in;
 	char	**av;
 	char	*sys;
-	int		ac = 0;
+	int		ac;
 
 	av = token_to_array(ast->token);
 	if (!av)
@@ -77,7 +77,7 @@ int		exec_command(t_ast *ast, t_sh *s)
 	return (1);
 }
 
-void	execute(char *cmd, char **av, t_sh *sh)
+void		execute(char *cmd, char **av, t_sh *sh)
 {
 	pid_t	pid;
 	char	**env;
@@ -99,7 +99,7 @@ void	execute(char *cmd, char **av, t_sh *sh)
 	ft_arraydel(&env);
 }
 
-int		check_executable(char *exe)
+int			check_executable(char *exe)
 {
 	struct stat	info;
 

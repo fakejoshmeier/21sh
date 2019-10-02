@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 13:46:02 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 17:33:34 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:45:38 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "lexer.h"
 
 /*
+** https://dev.to/oyagci/generating-a-parse-tree-from-a-shell-grammar-f1
+**
 ** Run through list of tokens, creating a new leaf and ripping off the
 ** remainder of the token list, passing it into the leaf to be parsed.  Done
 ** through the magic of recursion!
@@ -51,8 +53,8 @@ t_ast	*create_pipeline(t_tkn **token)
 				create_leaf(token, OPERATOR));
 		}
 		else
-			root = create_node(root, create_leaf(token, WORD), 
-			create_leaf(token, OPERATOR)); 
+			root = create_node(root, create_leaf(token, WORD),
+			create_leaf(token, OPERATOR));
 	}
 	return (root);
 }

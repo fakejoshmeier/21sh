@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:30:19 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/17 16:41:16 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:46:19 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		op_parse(char *token)
 int		reserved_word(char *val)
 {
 	int			i;
-	static char	*r_words[12] = { "if", "then", "else", "elif", "fi", "do", 
+	static char	*r_words[12] = { "if", "then", "else", "elif", "fi", "do",
 	"done", "case", "esac", "while", "until", "for" };
 
 	i = 0;

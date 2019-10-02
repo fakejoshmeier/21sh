@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/27 16:29:04 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 17:32:23 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:34:00 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	t_tkn	*tmp;
 	t_tkn	*ret;
 
-	if (!(*token))
+	if (!(*token) || (*token)->type == 404)
 		return (NULL);
 	new = ft_memalloc(sizeof(t_ast));
 	new->parent = NULL;

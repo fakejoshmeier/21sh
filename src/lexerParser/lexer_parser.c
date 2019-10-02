@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 17:35:52 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:38:58 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ void	lexer_parser(t_line *line, t_sh *sh)
 	tokens = lexer((char *)line->data);
 	line->length = 0;
 	ast = create_ast(&tokens);
-	ft_print_ast(ast, "HEAD", 0);
-	ast_redirect(ast, sh);
 	if (ast)
+	{
+		// ft_print_ast(ast, "HEAD", 0);
+		ast_redirect(ast, sh);
 		ast_del(&ast);
+	}
 }

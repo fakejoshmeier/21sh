@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/06/02 19:08:59 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:43:02 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 ** HOME and END are \033[H and \033[F respectively
-*/ 
+*/
 
 void	handle_updown(t_line *line, t_sh *sh, char in)
 {
