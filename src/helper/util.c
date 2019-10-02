@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 13:52:13 by jmeier            #+#    #+#             */
-/*   Updated: 2019/06/14 23:17:32 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:26:39 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,35 +44,6 @@ void	ignore(void)
 void	quit(void)
 {
 	g_running = FALSE;
-}
-
-char	**sanitize_av(char **av, int *ac)
-{
-	char		**tmp;
-	char		**av_new;
-	int			ac_new;
-	int			i;
-	int			j;
-
-	tmp = av;
-	i = -1;
-	ac_new = 0;
-	while (++i < *ac)
-		if (tmp[i])
-			++ac_new;
-	av_new = (char **)malloc(sizeof(char *) * ac_new + 1);
-	av_new[ac_new] = NULL;
-	i = -1;
-	j = 0;
-	while (++i < *ac)
-		if (av[i])
-			av_new[j++] = ft_strdup(tmp[i]);
-	i = -1;
-	while (++i < *ac)
-		free(tmp[i]);
-	free(tmp);
-	*ac = ac_new;
-	return (av_new);
 }
 
 /*

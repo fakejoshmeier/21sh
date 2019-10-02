@@ -1,19 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   pipe1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/25 15:53:35 by jmeier            #+#    #+#             */
-/*   Updated: 2019/07/06 17:32:28 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 15:58:57 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 #include "lexer.h"
-
-//https://github.com/shfranc/21sh/blob/master/srcs/exec/pipeline.c
 
 static void	fork_error(void)
 {

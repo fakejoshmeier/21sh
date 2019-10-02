@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:38:55 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/28 15:05:14 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:26:42 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,58 @@
 ** overview-of-redirection-and-pipe-operators-in-shell
 */
 
-int		exec_command(t_ast *ast, t_sh *sh)
+char	**token_to_array(t_tkn *token)
+{
+	char	**ret;
+	t_tkn	*tmp;
+	int		size;
+
+	if (!token)
+		return (NULL);
+	tmp = token;
+	size = 0;
+	while (tmp)
+	{
+		tmp = tmp->next;
+		++size;
+	}
+	ret = ft_memalloc(sizeof(char *) * size + 1);
+	ret[size] = NULL;
+	size = 0;
+	while (token)
+	{
+		ret[size++] = ft_strdup(token->val);
+		token = token->next;
+	}
+	return (ret);
+}
+
+int		exec_command(t_ast *ast, t_sh *s)
 {
 	t_fptr	b_in;
+	char	**av;
 	char	*sys;
-	char	**e;
+	int		ac = 0;
 
-	tmp = ft_strsplit(expand(ast->token->val, sh), ' ');
-	if (check_executable(e[0]))
-		execute(e[0], e, sh);
-	else if ((b_in = ft_map_get(&sh->builtin, ft_map_hash(&sh->builtin, e[0]))))
-		b_in(ast->next->size, ast->next->arr, sh);
-	else if ((sys = ft_map_get(&sh->path, ft_map_hash(&sh->path, e[0]))))
-		execute(sys, e, sh);
+	av = token_to_array(ast->token);
+	if (!av)
+		return (0);
+	ac = 0;
+	while (av[ac])
+		++ac;
+	ft_strtolower(&av[0]);
+	if (check_executable(av[0]))
+		execute(av[0], av, s);
+	else if ((b_in = ft_map_get(&s->builtin, ft_map_hash(&s->builtin, av[0]))))
+		b_in(ac, av, s);
+	else if ((sys = ft_map_get(&s->path, ft_map_hash(&s->path, av[0]))))
+		execute(sys, av, s);
 	else
 	{
-		ft_printf(BLU"jo.sh"RES": command not found: %s\n", tmp[0]);
+		ERROR_PROMPT(COMMAND_ERR, av[0]);
 		return (0);
 	}
-	ft_arraydel(tmp);
+	ft_arraydel(&av);
 	return (1);
 }
 
@@ -56,15 +89,14 @@ void	execute(char *cmd, char **av, t_sh *sh)
 		tcsetattr(STDIN_FILENO, TCSANOW, &sh->term_settings);
 		env = map_to_array(&sh->env);
 		execve(cmd, av, env);
-		ft_printf("%i\n", errno);
 		ft_putendl("Failed to execute command");
-		ft_arraydel(av);
+		ft_arraydel(&av);
 		exit(1);
 	}
 	else
 		waitpid(pid, 0, 0);
 	enter_raw_mode();
-	ft_arraydel(env);
+	ft_arraydel(&env);
 }
 
 int		check_executable(char *exe)

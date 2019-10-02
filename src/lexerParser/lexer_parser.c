@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/24 17:37:53 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 17:35:52 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,26 @@
 ** Follow shell grammar hierarchy
 */
 
-int		exec_separator(t_ast *ast)
+int		exec_separator(t_ast *ast, t_sh *sh)
 {
-	ast_redirect(ast->left);
-	return (ast_redirect(ast->right));
+	ast_redirect(ast->left, sh);
+	return (ast_redirect(ast->right, sh));
 }
 
-int		exec_andif(t_ast *ast)
+int		exec_andif(t_ast *ast, t_sh *sh)
 {
-	if (ast_redirect(ast->left))
-		return (ast_redirect(ast->right));
+	if (ast_redirect(ast->left, sh))
+		return (ast_redirect(ast->right, sh));
 	else
 		return (1);
 }
 
-int		exec_orif(t_ast *ast)
+int		exec_orif(t_ast *ast, t_sh *sh)
 {
-	if (ast_redirect(ast->left))
+	if (ast_redirect(ast->left, sh))
 		return (1);
 	else
-		return (ast_redirect(ast->right));
+		return (ast_redirect(ast->right, sh));
 }
 
 int		ast_redirect(t_ast *ast, t_sh *sh)
@@ -56,15 +56,15 @@ int		ast_redirect(t_ast *ast, t_sh *sh)
 	if (!ast)
 		return (0);
 	if (ast->op_type == SEPARATOR)
-		return (exec_separator(ast));
+		return (exec_separator(ast, sh));
 	else if (ast->op_type == ANDIF)
-		return (exec_andif(ast));
+		return (exec_andif(ast, sh));
 	else if (ast->op_type == ORIF)
-		return (exec_orif(ast));
+		return (exec_orif(ast, sh));
 	else if (ast->op_type == PIPE)
-		return (exec_pipe(ast));
+		return (exec_pipe(ast, sh));
 	else if (ast->type != OPERATOR)
-		return (exec_command(ast));
+		return (exec_command(ast, sh));
 	return (1);
 }
 
@@ -76,11 +76,11 @@ void	lexer_parser(t_line *line, t_sh *sh)
 	sh->history = !sh->history ? hist_new((char *)line->data) :
 		hist_add(sh->history, (char *)line->data);
 	sh->curr = NULL;
-	// tokens = lexer(expand((char *)line->data, sh));
 	tokens = lexer((char *)line->data);
 	line->length = 0;
 	ast = create_ast(&tokens);
+	ft_print_ast(ast, "HEAD", 0);
 	ast_redirect(ast, sh);
-	if (!ast)
+	if (ast)
 		ast_del(&ast);
 }

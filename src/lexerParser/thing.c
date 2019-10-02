@@ -6,9 +6,12 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/22 20:56:00 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/22 20:56:11 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 17:39:04 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "sh.h"
+#include "lexer.h"
 
 void	ft_padding(int padd)
 {
@@ -34,9 +37,10 @@ void	ft_print_node(t_ast *ast, char *side, int lvl)
 	while (tmp)
 	{
 		ft_putstr(tmp->val);
-		ft_putstr(" ");
+		ft_putstr("-");
 		tmp = tmp->next;
 	}
+	ft_putstr("|");
 	ft_putendl(RES);
 	ft_padding(lvl);
 	ft_putendl("************");

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/09/22 20:51:52 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 15:50:23 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@
 # define ENVIRON extern char **environ
 # define FUG(a, b) ft_strrchr_ind(a, b)
 # define DUG(a, b) ft_strndup(a, b)
+
+/*
+** Error Macros
+*/
+
+# define ERROR_PROMPT(err, s) ft_printf(BLU"jo.sh"RES": %s: %s\n", err, s)
+# define COMMAND_ERR "command not found"
 
 typedef struct		s_line
 {

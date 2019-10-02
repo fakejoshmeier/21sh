@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 00:30:28 by jmeier            #+#    #+#             */
-/*   Updated: 2019/09/24 17:23:33 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 19:26:47 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,16 @@ typedef struct		s_ast
 	t_tkn			*end;
 }					t_ast;
 
+/*
+** Lexer body
+*/
+
 t_tkn				*lexer(char *line);
 int					token_split(char **line, t_lexer *lex);
 void				token_add(t_lexer *lex);
 
 /*
-** Lexer checks on the line
+** Lexer checks
 */
 
 int					lex_check0(char **line, t_lexer *lex);
@@ -89,10 +93,14 @@ int					lex_check4(char **line, t_lexer *lex);
 int					lex_check5(char **line, t_lexer *lex);
 int					lex_check6(char **line, t_lexer *lex);
 int					lex_check7(char **line, t_lexer *lex);
-
 int					two_char_op(t_lexer *lex);
 int					op_parse(char *tkn);
 int					reserved_word(char *val);
+void				token_del(t_tkn **token);
+
+/*
+** AST Creation, Token handling, Deletion
+*/
 
 t_ast				*create_ast(t_tkn **token);
 t_ast				*create_list(t_tkn **token);
@@ -105,13 +113,22 @@ void				ast_del(t_ast **ast);
 
 t_ast				*sh_parse(t_ast *ast, t_tkn *token, t_sh *sh);
 char				*expand(char *in, t_sh *sh);
-void				ast_token_clean(t_ast *ast, t_list *tokens);
+void				ft_print_ast(t_ast *ast, char *side, int lvl);
 
-int					ast_redirect(t_ast *ast, t_sh *sh);
+/*
+** Execution
+*/
+
 int					exec_command(t_ast *ast, t_sh *sh);
-int					command_check(t_ast *ast, t_sh *sh);
+char				**sanitize_av(char **av, int *ac);
+void				get_av_ac(char *x, char ***av, int *ac, t_sh *sh);
 void				execute(char *cmd, char **av, t_sh *sh);
 int					check_executable(char *exe);
-t_ast				*ft_pipe(t_ast *ast, t_ast *down, t_sh *sh);
+
+int					ast_redirect(t_ast *ast, t_sh *sh);
+int					exec_separator(t_ast *ast, t_sh *sh);
+int					exec_andif(t_ast *ast, t_sh *sh);
+int					exec_orif(t_ast *ast, t_sh *sh);
+int					exec_pipe(t_ast *ast, t_sh *sh);
 
 #endif
