@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 19:38:58 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 11:41:20 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@
 
 int		exec_separator(t_ast *ast, t_sh *sh)
 {
-	ast_redirect(ast->left, sh);
+	if (ast->token->val[0] == '&')
+		ast_redirect(ast->left, sh);
+	else
+		ast_redirect(ast->left, sh);
 	return (ast_redirect(ast->right, sh));
 }
 
@@ -63,6 +66,8 @@ int		ast_redirect(t_ast *ast, t_sh *sh)
 		return (exec_orif(ast, sh));
 	else if (ast->op_type == PIPE)
 		return (exec_pipe(ast, sh));
+	else if (ast->op_type == REDIRECT)
+		return (exec_command(ast, sh));
 	else if (ast->type != OPERATOR)
 		return (exec_command(ast, sh));
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:55:10 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 16:20:50 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 11:37:29 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ void	token_add(t_lexer *lex)
 	token = (t_tkn *)malloc(sizeof(t_tkn));
 	token->val = ft_strndup(lex->tkn_start, lex->tkn_len);
 	token->len = lex->tkn_len;
-	token->type = lex->tkn_type;
-	token->op_type = token->type == WORD ? reserved_word(token->val) :
+	token->op_type = lex->tkn_type == WORD ? reserved_word(token->val) :
 		op_parse(token->val);
+	token->type = token->op_type > DUB_SEMI && token->op_type < If ? REDIRECT :
+		lex->tkn_type;
 	token->next = NULL;
 	if (!lex->start)
 	{
