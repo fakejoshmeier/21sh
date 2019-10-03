@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/15 09:04:03 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 22:02:28 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/01 22:23:18 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	handle_updown(t_line *line, t_sh *sh, char in)
 		sh->curr = sh->curr->prev;
 	clear_line(line, sh->curr->content);
 }
-
+ 
 /*
 ** My thoughts on g_pos are basically that in the default position, i.e. at
 ** the very end of the input, the index is the position of the new char that is
@@ -144,5 +144,7 @@ int		read_line(t_line *line, t_sh *sh)
 		handle_escape(line, in, sh);
 	else if (ft_isprint(in) || in == '\n')
 		handle_write(line, in, sh);
+	else if ((int)in == 6)
+		write(1, "C", 1);
 	return (in == '\n' ? TRUE : FALSE);
 }
