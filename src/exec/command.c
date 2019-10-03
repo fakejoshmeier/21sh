@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:38:55 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/01 19:45:55 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 11:15:20 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,6 @@
 ** overview-of-redirection-and-pipe-operators-in-shell
 */
 
-static char	**token_to_array(t_tkn *token)
-{
-	char	**ret;
-	t_tkn	*tmp;
-	int		size;
-
-	if (!token)
-		return (NULL);
-	tmp = token;
-	size = 0;
-	while (tmp)
-	{
-		tmp = tmp->next;
-		++size;
-	}
-	ret = ft_memalloc(sizeof(char *) * size + 1);
-	ret[size] = NULL;
-	size = 0;
-	while (token)
-	{
-		ret[size++] = ft_strdup(token->val);
-		token = token->next;
-	}
-	return (ret);
-}
-
 int			exec_command(t_ast *ast, t_sh *s)
 {
 	t_fptr	b_in;
@@ -55,7 +29,7 @@ int			exec_command(t_ast *ast, t_sh *s)
 	char	*sys;
 	int		ac;
 
-	av = token_to_array(ast->token);
+	av = token_to_array(ast->token, s);
 	if (!av)
 		return (0);
 	ac = 0;
