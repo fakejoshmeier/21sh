@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/10/01 19:48:17 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 10:04:30 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,22 @@
 
 # define ERROR_PROMPT(err, s) ft_printf(BLU"jo.sh"RES": %s: %s\n", err, s)
 # define COMMAND_ERR "command not found"
+# define PIPE_ERR "pipe failed"
+# define DUP_ERR "dup error"
+# define FORK_ERR "fork failed"
+# define EXECVE_ERR	"21sh: execve failed"
+# define NO_FILE_ERR "No such file or directory"
+# define IS_DIR_ERR "is a directory"
+# define NOT_DIR_ERR "Not a directory"
+# define PERM_DENIED "Permission denied"
+# define BAD_FD_ERR "Bad file descriptor"
+# define OPEN_ERR "open error"
+# define AMB_REDIR "ambiguous redirection"
+
+# define SEGFAULT "Segmentation Fault: 11"
+# define FLOATING "Floating point exception: 8"
+# define BUS_ERROR "Bus error: 10"
+# define SIGABORT "Abort: 6"
 
 typedef struct		s_line
 {
