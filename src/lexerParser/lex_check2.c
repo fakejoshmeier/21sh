@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/23 20:02:23 by jmeier            #+#    #+#             */
-/*   Updated: 2019/05/23 20:03:43 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 19:22:15 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,31 @@
 */
 
 /*
+** IO Numbers are a thing, apparently.  But only in the case of a redirection.
+*/
+
+int		lex_check4(char **line, t_lexer *lex)
+{
+	if (**line >= '0' && **line <= '9')
+	{
+		if (!(lex->tkn_start))
+		{
+			lex->tkn_start = *line;
+			lex->tkn_type = IONUMBER;
+		}
+		++(lex->tkn_len);
+		return (1);
+	}
+	return (0);
+}
+
+/*
 ** In the case of an escaped space, the buffer is moved forward and both the
 ** escape and the following character are kept.  I'll parse it all as part of
 ** the AST creation process
 */
 
-int		lex_check4(char **line, t_lexer *lex)
+int		lex_check5(char **line, t_lexer *lex)
 {
 	char	e;
 
@@ -45,12 +64,16 @@ int		lex_check4(char **line, t_lexer *lex)
 ** I've got a blank space, baby.  And I'll write your name
 */
 
-int		lex_check5(char **line, t_lexer *lex)
+int		lex_check6(char **line, t_lexer *lex)
 {
 	if (ft_isspace(**line))
 	{
 		if (lex->tkn_start)
+		{
+			if (lex->tkn_type == IONUMBER)
+				lex->tkn_type = WORD;
 			token_add(lex);
+		}
 		return (1);
 	}
 	return (0);
@@ -60,11 +83,21 @@ int		lex_check5(char **line, t_lexer *lex)
 ** Checks if the current token is a word and to just keep moving forward.
 */
 
-int		lex_check6(char **line, t_lexer *lex)
+int		lex_check7(char **line, t_lexer *lex)
 {
-	(void)line;
 	if (lex->tkn_type == WORD)
 	{
+		++(lex->tkn_len);
+		return (1);		
+	}
+	if (**line >= '0' && **line <= '9' && lex->tkn_type == IONUMBER)
+	{
+		++(lex->tkn_len);
+		return (1);
+	}
+	else if (ft_isalpha(**line) && lex->tkn_type == IONUMBER)
+	{
+		lex->tkn_type = WORD;
 		++(lex->tkn_len);
 		return (1);
 	}
@@ -76,7 +109,7 @@ int		lex_check6(char **line, t_lexer *lex)
 ** c'mon, it's an operator or it's not.
 */
 
-int		lex_check7(char **line, t_lexer *lex)
+int		lex_check8(char **line, t_lexer *lex)
 {
 	lex->tkn_type = WORD;
 	lex->tkn_start = *line;

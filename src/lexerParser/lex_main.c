@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:55:10 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 11:37:29 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 19:16:59 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@ void	token_add(t_lexer *lex)
 	token = (t_tkn *)malloc(sizeof(t_tkn));
 	token->val = ft_strndup(lex->tkn_start, lex->tkn_len);
 	token->len = lex->tkn_len;
-	token->op_type = lex->tkn_type == WORD ? reserved_word(token->val) :
+	token->type = lex->tkn_type;
+	if (lex->tkn_type == IONUMBER)
+		token->op_type = IONUMBER;
+	else
+		token->op_type = lex->tkn_type == WORD ? reserved_word(token->val) :
 		op_parse(token->val);
-	token->type = token->op_type > DUB_SEMI && token->op_type < If ? REDIRECT :
-		lex->tkn_type;
 	token->next = NULL;
 	if (!lex->start)
 	{
@@ -44,13 +46,14 @@ int		token_split(char **line, t_lexer *lex)
 {
 	int			res;
 	int			i;
-	static int	(*checks[8])(char **line, t_lexer *lex) = {
+	static int	(*checks[9])(char **line, t_lexer *lex) = {
 		lex_check0, lex_check1, lex_check2, lex_check3,
-		lex_check4, lex_check5, lex_check6, lex_check7
+		lex_check4, lex_check5, lex_check6, lex_check7,
+		lex_check8
 	};
 
 	i = -1;
-	while (++i < 8)
+	while (++i < 9)
 	{
 		res = (checks[i])(line, lex);
 		if (res)
@@ -74,6 +77,7 @@ t_tkn	*lexer(char *line)
 		token_split(&line, &lex);
 		++line;
 	}
+	lex.tkn_type = lex.tkn_type == IONUMBER ? WORD : lex.tkn_type;
 	if (lex.tkn_start)
 		token_add(&lex);
 	cap = (t_tkn *)malloc(sizeof(t_tkn));

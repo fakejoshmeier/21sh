@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 13:46:02 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 11:40:39 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 19:46:59 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 /*
 ** https://dev.to/oyagci/generating-a-parse-tree-from-a-shell-grammar-f1
+**
+** https://stackoverflow.com/questions/12942042/pipe-redirection-precedence
 **
 ** Run through list of tokens, creating a new leaf and ripping off the
 ** remainder of the token list, passing it into the leaf to be parsed.  Done
@@ -25,6 +27,17 @@ int		next_op(t_tkn *token, int op)
 	t_tkn	*tmp;
 
 	tmp = token->next;
+	if (op == REDIRECT)
+	{
+		if (token->type == IONUMBER)
+			return (0);
+		while (tmp)
+		{
+			if (tmp->op_type >= LESS && tmp->op_type <= CLOBBER)
+				return (1);
+			tmp = tmp->next;
+		}		
+	}
 	while (tmp)
 	{
 		if (tmp->op_type == op)
@@ -32,6 +45,27 @@ int		next_op(t_tkn *token, int op)
 		tmp = tmp->next;
 	}
 	return (0);
+}
+
+t_ast	*create_redirect(t_tkn **token)
+{
+	t_ast	*root;
+
+	root = create_leaf(token, OPERATOR);
+	if (((*token)->op_type >= LESS && (*token)->op_type <= CLOBBER) ||
+		(*token)->type == IONUMBER)
+	{
+		if (next_op(*token, REDIRECT))
+		{
+			while ((*token)->op_type >= LESS && (*token)->op_type <= CLOBBER)
+				root = create_node(root, create_leaf(token, WORD),
+				create_leaf(token, OPERATOR));
+		}
+		else
+			root = create_node(root, create_leaf(token, WORD),
+			create_leaf(token, OPERATOR));
+	}
+	return (root);
 }
 
 /*
@@ -42,18 +76,18 @@ t_ast	*create_pipeline(t_tkn **token)
 {
 	t_ast	*root;
 
-	root = create_leaf(token, OPERATOR);
+	root = create_redirect(token);
 	if ((*token)->op_type == PIPE)
 	{
 		if (next_op(*token, PIPE))
 		{
 			while ((*token)->op_type == PIPE)
 				root = create_node(root, create_leaf(token, WORD),
-				create_leaf(token, OPERATOR));
+				create_redirect(token));
 		}
 		else
 			root = create_node(root, create_leaf(token, WORD),
-			create_leaf(token, OPERATOR));
+			create_redirect(token));
 	}
 	return (root);
 }

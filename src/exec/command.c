@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:38:55 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 11:15:20 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 15:47:56 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		execute(char *cmd, char **av, t_sh *sh)
 		tcsetattr(STDIN_FILENO, TCSANOW, &sh->term_settings);
 		env = map_to_array(&sh->env);
 		execve(cmd, av, env);
-		ft_putendl("Failed to execute command");
+		ERROR_PROMPT(COMMAND_FAIL, cmd);
 		ft_arraydel(&av);
 		exit(1);
 	}

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/10/03 10:04:30 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 15:48:02 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@
 # define PIPE_ERR "pipe failed"
 # define DUP_ERR "dup error"
 # define FORK_ERR "fork failed"
-# define EXECVE_ERR	"21sh: execve failed"
+# define EXECVE_ERR	"execve failed"
+# define COMMAND_FAIL "Failed to execute command"
 # define NO_FILE_ERR "No such file or directory"
 # define IS_DIR_ERR "is a directory"
 # define NOT_DIR_ERR "Not a directory"

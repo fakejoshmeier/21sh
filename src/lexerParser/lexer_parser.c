@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 11:41:20 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 19:53:57 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 ** cleaned up.  For redirections, pipes, and other things that require
 ** two processes, there is a specialized execution set, otherwise it all
 ** continues as did before.
+**
+** https://unix.stackexchange.com/questions/159513/what-are-the-shells-control-
+** and-redirection-operators
 */
 
 //https://dev.to/oyagci/generating-a-parse-tree-from-a-shell-grammar-f1
@@ -66,7 +69,8 @@ int		ast_redirect(t_ast *ast, t_sh *sh)
 		return (exec_orif(ast, sh));
 	else if (ast->op_type == PIPE)
 		return (exec_pipe(ast, sh));
-	else if (ast->op_type == REDIRECT)
+	else if ((ast->type == OPERATOR && ast->token->op_type >= LESS &&
+		ast->token->op_type <= CLOBBER) || ast->type == IONUMBER)
 		return (exec_command(ast, sh));
 	else if (ast->type != OPERATOR)
 		return (exec_command(ast, sh));
@@ -86,8 +90,8 @@ void	lexer_parser(t_line *line, t_sh *sh)
 	ast = create_ast(&tokens);
 	if (ast)
 	{
-		// ft_print_ast(ast, "HEAD", 0);
-		ast_redirect(ast, sh);
+		ft_print_ast(ast, "HEAD", 0);
+		// ast_redirect(ast, sh);
 		ast_del(&ast);
 	}
 }
