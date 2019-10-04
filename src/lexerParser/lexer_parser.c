@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/22 23:20:29 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 19:53:57 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 22:05:12 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int		ast_redirect(t_ast *ast, t_sh *sh)
 		return (exec_pipe(ast, sh));
 	else if ((ast->type == OPERATOR && ast->token->op_type >= LESS &&
 		ast->token->op_type <= CLOBBER) || ast->type == IONUMBER)
-		return (exec_command(ast, sh));
+		return (exec_redirect(ast, sh));
 	else if (ast->type != OPERATOR)
 		return (exec_command(ast, sh));
 	return (1);
@@ -87,6 +87,12 @@ void	lexer_parser(t_line *line, t_sh *sh)
 	sh->curr = NULL;
 	tokens = lexer((char *)line->data);
 	line->length = 0;
+	t_tkn *tmp = tokens;
+	while (tmp)
+	{
+		ft_printf("%i - %i - %s\n", tmp->type, tmp->op_type, tmp->val);
+		tmp = tmp->next;
+	}
 	ast = create_ast(&tokens);
 	if (ast)
 	{

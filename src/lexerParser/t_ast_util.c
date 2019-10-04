@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/27 16:29:04 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 19:46:40 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 22:35:40 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	t_ast	*new;
 	t_tkn	*tmp;
 	t_tkn	*ret;
-
+	
 	if (!(*token) || (*token)->type == 404)
 		return (NULL);
 	ret = *token;
@@ -45,7 +45,6 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	new->type = (*token)->type;
 	new->op_type = (*token)->op_type;
 	new->token = *token;
-	ret = *token;
 	while (ret->next && ret->type != delim)
 	{
 		tmp = ret;

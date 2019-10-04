@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 00:30:28 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 18:54:36 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 21:32:49 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ enum			e_operators
 {
 	ANDIF = IO_NUMBER + 1, ORIF, DUB_SEMI, LESS, GREAT,
 	D_LESS, D_GREAT, LESSAND, GREATAND, DIAMOND, D_LESSDASH,
-	CLOBBER,
+	CLOBBER
 };
 
 enum			e_reserved_words
@@ -131,6 +131,7 @@ int					ast_redirect(t_ast *ast, t_sh *sh);
 int					exec_separator(t_ast *ast, t_sh *sh);
 int					exec_andif(t_ast *ast, t_sh *sh);
 int					exec_orif(t_ast *ast, t_sh *sh);
+int					exec_redirect(t_ast *ast, t_sh *sh);
 int					exec_pipe(t_ast *ast, t_sh *sh);
 
 #endif

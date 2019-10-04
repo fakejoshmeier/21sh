@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 13:46:02 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 19:46:59 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/03 22:36:00 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int		next_op(t_tkn *token, int op)
 	if (op == REDIRECT)
 	{
 		if (token->type == IONUMBER)
-			return (0);
+			tmp = tmp->next;
 		while (tmp)
 		{
 			if (tmp->op_type >= LESS && tmp->op_type <= CLOBBER)
 				return (1);
 			tmp = tmp->next;
-		}		
+		}
 	}
 	while (tmp)
 	{
@@ -57,13 +57,16 @@ t_ast	*create_redirect(t_tkn **token)
 	{
 		if (next_op(*token, REDIRECT))
 		{
-			while ((*token)->op_type >= LESS && (*token)->op_type <= CLOBBER)
+			while (((*token)->op_type >= LESS && (*token)->op_type <= CLOBBER)
+				|| (*token)->type == IONUMBER)
 				root = create_node(root, create_leaf(token, WORD),
 				create_leaf(token, OPERATOR));
 		}
 		else
+		{
 			root = create_node(root, create_leaf(token, WORD),
 			create_leaf(token, OPERATOR));
+		}
 	}
 	return (root);
 }
