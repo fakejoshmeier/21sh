@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/02 13:59:14 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/08 14:02:05 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/06 14:12:05 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*get_path(int ac, char **av, t_sh *sh)
 	}
 	else if (ac == 2 && !ft_strcmp(av[1], "-"))
 	{
-		ft_printf("%s\n", sh->old);
+		ft_printf("%s", sh->old);
 		return (sh->old);
 	}
 	return (av[1]);
@@ -52,13 +52,13 @@ void	b_cd(int ac, char **av, t_sh *sh)
 
 	path = get_path(ac, av, sh);
 	if (ac > 2)
-		ft_printf("usage: cd [PATH]\n");
+		ft_printf("usage: cd [PATH]");
 	else if (stat(path, &dir))
-		ft_printf("cd: no such file or directory: %s\n", path);
+		ft_printf("cd: no such file or directory: %s", path);
 	else if (!S_ISDIR(dir.st_mode))
-		ft_printf("cd: not a directory: %s\n", path);
+		ft_printf("cd: not a directory: %s", path);
 	else if (chdir(path))
-		ft_printf("cd: permission denied: %s\n", path);
+		ft_printf("cd: permission denied: %s", path);
 	else
 	{
 		ft_strcpy(sh->old, sh->cwd);

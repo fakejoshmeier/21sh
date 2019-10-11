@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:30:19 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 21:35:57 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 23:12:41 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ int		op_parse(char *token)
 		return (PIPE);
 	else if (ft_strequ("&", token) || ft_strequ(";", token))
 		return (SEPARATOR);
+	else if (ft_strequ("&>", token))
+		return (GREATAND);
+	else if (ft_strequ("&<", token))
+		return (LESSAND);
 	while (++i < 24)
 	{
 		if (ft_strequ(ops[i], token))

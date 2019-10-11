@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 00:30:28 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 21:32:49 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 12:00:06 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ enum			e_words
 
 enum			e_operators
 {
-	ANDIF = IO_NUMBER + 1, ORIF, DUB_SEMI, LESS, GREAT,
+	ANDIF = IO_NUMBER + 1, ORIF, D_SEMI, LESS, GREAT,
 	D_LESS, D_GREAT, LESSAND, GREATAND, DIAMOND, D_LESSDASH,
 	CLOBBER
 };
@@ -46,6 +46,7 @@ typedef struct		s_tkn
 	int				len;
 	int				type;
 	int				op_type;
+	int				fd;
 	struct s_tkn	*next;
 }					t_tkn;
 
@@ -125,13 +126,18 @@ char				**sanitize_av(char **av, int *ac);
 void				get_av_ac(char *x, char ***av, int *ac, t_sh *sh);
 void				execute(char *cmd, char **av, t_sh *sh);
 int					check_executable(char *exe);
-char				**token_to_array(t_tkn *token, t_sh *sh);
+char				**token_to_array(t_tkn *token);
 
 int					ast_redirect(t_ast *ast, t_sh *sh);
 int					exec_separator(t_ast *ast, t_sh *sh);
 int					exec_andif(t_ast *ast, t_sh *sh);
 int					exec_orif(t_ast *ast, t_sh *sh);
-int					exec_redirect(t_ast *ast, t_sh *sh);
 int					exec_pipe(t_ast *ast, t_sh *sh);
+
+int					set_fd(t_ast *ast, t_sh *sh);
+int					fd_redirect(t_tkn *token);
+int					fd_aggregate(t_tkn *token, t_sh *sh);
+int					fd_heredoc(t_tkn *token, t_sh *sh);
+void				unset_fd(t_ast *ast, t_sh *sh);
 
 #endif

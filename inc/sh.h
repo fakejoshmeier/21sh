@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/10 17:00:37 by josh              #+#    #+#             */
-/*   Updated: 2019/10/03 15:48:02 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/09 00:21:06 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "ft_printf.h"
 # include <termios.h>
 # include <time.h>
+# include <errno.h>
 # include <dirent.h>
 # include <fcntl.h>
 # include <signal.h>
@@ -53,6 +54,10 @@
 # define BUS_ERROR "Bus error: 10"
 # define SIGABORT "Abort: 6"
 
+# define PERMISSIONS S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
+# define APPEND O_WRONLY | O_CREAT | O_APPEND
+# define TRUNCATE O_WRONLY | O_CREAT | O_TRUNC
+
 typedef struct		s_line
 {
 	uint8_t			*data;
@@ -76,6 +81,7 @@ typedef struct		s_cont
 
 typedef struct		s_sh
 {
+	int				fds[3];
 	char			cwd[MAXPATHLEN];
 	char			old[MAXPATHLEN];
 	char			**bin_arr;
@@ -133,4 +139,8 @@ void				b_env(int ac, char **av, t_sh *sh);
 void				b_setenv(int ac, char **av, t_sh *sh);
 void				b_unsetenv(int ac, char **av, t_sh *sh);
 void				b_exit(int ac, char **av, t_sh *sh);
+
+int		redirect_error(int error);
+int		failure_error(int error);
+
 #endif

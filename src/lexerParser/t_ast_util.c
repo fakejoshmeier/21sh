@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/27 16:29:04 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 22:35:40 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/08 22:12:13 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	{
 		tmp = ret;
 		ret = tmp->next;
-		if (delim == OPERATOR && ret->type == IONUMBER)
-			break ;
+		// if (delim == OPERATOR && ret->type == IONUMBER)
+		// 	break ;
 	}
 	*token = ret;
 	tmp->next = NULL;

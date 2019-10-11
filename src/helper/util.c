@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 13:52:13 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 11:15:01 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/08 21:09:03 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,33 +50,6 @@ void	quit(void)
 ** instead iterate through the whole thing.  I can allocate for the size of my
 ** returned array though.
 */
-
-char	**token_to_array(t_tkn *token, t_sh *sh)
-{
-	char	**ret;
-	t_tkn	*tmp;
-	int		size;
-
-	if (!token)
-		return (NULL);
-	tmp = token;
-	size = 0;
-	while (tmp)
-	{
-		tmp = tmp->next;
-		++size;
-	}
-	ret = ft_memalloc(sizeof(char *) * size + 1);
-	ret[size] = NULL;
-	size = 0;
-	while (token)
-	{
-		ret[size] = expand(token->val, sh);
-		ft_printf("%s\n", ret[size++]);
-		token = token->next;
-	}
-	return (ret);
-}
 
 char	**map_to_array(t_map *map)
 {

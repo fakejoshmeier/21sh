@@ -6,7 +6,7 @@
 #    By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/14 16:30:04 by jmeier            #+#    #+#              #
-#    Updated: 2019/10/03 21:23:05 by jmeier           ###   ########.fr        #
+#    Updated: 2019/10/09 00:21:42 by jmeier           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = 21sh
 FUNC = main \
 read_line autocomplete cursor input_util expand\
 lexer_parser lex_main lex_check lex_check2 operator t_ast t_ast_util\
-command pipe redirect thing\
+command pipe redirect heredoc aggregate error_handler thing\
 b_cd b_echo b_exit b_env b_setenv b_unsetenv \
 util t_line t_hist path util2 \
 

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/23 20:02:23 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 20:04:12 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 23:12:30 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int		lex_check6(char **line, t_lexer *lex)
 	{
 		if (lex->tkn_start)
 		{
-			if (lex->tkn_type == IONUMBER)
+			if (lex->tkn_type == IONUMBER && lex->end->op_type != GREATAND &&
+			lex->end->op_type != LESSAND)
 				lex->tkn_type = WORD;
 			token_add(lex);
 		}

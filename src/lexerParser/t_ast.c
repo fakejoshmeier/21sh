@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 13:46:02 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 22:36:00 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/08 22:12:18 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,18 @@ t_ast	*create_pipeline(t_tkn **token)
 {
 	t_ast	*root;
 
-	root = create_redirect(token);
+	root = create_leaf(token, OPERATOR);
 	if ((*token)->op_type == PIPE)
 	{
 		if (next_op(*token, PIPE))
 		{
 			while ((*token)->op_type == PIPE)
 				root = create_node(root, create_leaf(token, WORD),
-				create_redirect(token));
+				create_leaf(token, OPERATOR));
 		}
 		else
 			root = create_node(root, create_leaf(token, WORD),
-			create_redirect(token));
+			create_leaf(token, OPERATOR));
 	}
 	return (root);
 }

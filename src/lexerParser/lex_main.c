@@ -6,27 +6,41 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 23:55:10 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 23:36:29 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 23:12:23 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh.h"
 #include "lexer.h"
 
-void	token_add(t_lexer *lex)
+t_tkn	*new_token(t_lexer *lex)
 {
 	t_tkn	*token;
 
 	token = (t_tkn *)malloc(sizeof(t_tkn));
 	token->val = ft_strndup(lex->tkn_start, lex->tkn_len);
 	token->len = lex->tkn_len;
+	token->fd = -1;
 	token->type = lex->tkn_type;
 	if (lex->tkn_type == IONUMBER)
 		token->op_type = IONUMBER;
+	else if (lex->tkn_type == WORD)
+		token->op_type = reserved_word(token->val);
 	else
-		token->op_type = lex->tkn_type == WORD ? reserved_word(token->val) :
-		op_parse(token->val);
+	{
+		token->op_type = op_parse(token->val);
+		if (token->op_type >= LESS && token->op_type <= CLOBBER)
+			token->type = REDIRECT;
+	}
 	token->next = NULL;
+	return (token);	
+}
+
+void	token_add(t_lexer *lex)
+{
+	t_tkn	*token;
+
+	token = new_token(lex);
 	if (!lex->start)
 	{
 		lex->start = token;
@@ -67,7 +81,7 @@ t_tkn	*lexer(char *line)
 	t_lexer	lex;
 	t_tkn	*cap;
 
-	lex.tkn_start = line;
+	lex.tkn_start = NULL;
 	lex.tkn_len = 0;
 	lex.tkn_type = -1;
 	lex.start = NULL;

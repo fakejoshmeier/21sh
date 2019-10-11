@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 13:02:54 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 21:30:01 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 23:12:35 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		lex_check0(char **line, t_lexer *lex)
 {
 	if (**line == '\0')
 	{
-		if (lex->tkn_start)
+		if (lex->tkn_start != NULL)
 		{
 			if (lex->tkn_type == IONUMBER)
 				lex->tkn_type = WORD;
@@ -100,7 +100,7 @@ int		lex_check3(char **line, t_lexer *lex)
 	if (op == '|' || op == ';' || op == '(' || op == ')' || op == '&'
 	|| op == '<' || op == '>' || op == '{' || op == '}' || op == '!')
 	{
-		if (lex->tkn_start)
+		if (lex->tkn_start != NULL)
 		{
 			if (lex->tkn_type == IONUMBER && op != '<' && op != '>')
 				lex->tkn_type = WORD;

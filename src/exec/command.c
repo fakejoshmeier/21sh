@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:38:55 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/03 15:47:56 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 23:05:36 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,59 @@
 ** overview-of-redirection-and-pipe-operators-in-shell
 */
 
+char		**token_to_array(t_tkn *token)
+{
+	t_tkn	*tmp;
+	char	**ret;
+
+	ret = NULL;
+	if (!token)
+		return (NULL);
+	tmp = token;
+	while (tmp)
+	{
+		if (tmp->type == IO_NUMBER)
+			tmp = tmp->next;
+		else if (tmp->type == REDIRECT)
+		{
+			if (tmp->next->type == IO_NUMBER)
+				tmp = tmp->next;
+			tmp = tmp->next->next;
+		}
+		else
+		{
+			ret = ft_arr_add(ret, tmp->val);
+			tmp = tmp->next;
+		}
+	}
+	return (ret);
+}
+
 int			exec_command(t_ast *ast, t_sh *s)
 {
 	t_fptr	b_in;
 	char	**av;
 	char	*sys;
-	int		ac;
 
-	av = token_to_array(ast->token, s);
-	if (!av)
-		return (0);
-	ac = 0;
-	while (av[ac])
-		++ac;
+	if (!(av = token_to_array(ast->token)))
+		return (1);
+	if (set_fd(ast, s))
+		return (1);
 	ft_strtolower(&av[0]);
 	if (check_executable(av[0]))
 		execute(av[0], av, s);
 	else if ((b_in = ft_map_get(&s->builtin, ft_map_hash(&s->builtin, av[0]))))
-		b_in(ac, av, s);
+		b_in(ft_arrlen(av), av, s);
 	else if ((sys = ft_map_get(&s->path, ft_map_hash(&s->path, av[0]))))
 		execute(sys, av, s);
 	else
 	{
 		ERROR_PROMPT(COMMAND_ERR, av[0]);
-		return (0);
+		return (1);
 	}
+	unset_fd(ast, s);
 	ft_arraydel(&av);
-	return (1);
+	return (0);
 }
 
 void		execute(char *cmd, char **av, t_sh *sh)
@@ -65,11 +91,10 @@ void		execute(char *cmd, char **av, t_sh *sh)
 		execve(cmd, av, env);
 		ERROR_PROMPT(COMMAND_FAIL, cmd);
 		ft_arraydel(&av);
-		exit(1);
+		exit(STDIN_FILENO);
 	}
 	else
 		waitpid(pid, 0, 0);
-	enter_raw_mode();
 	ft_arraydel(&env);
 }
 
