@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/27 16:29:04 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/08 22:12:13 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 23:36:57 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	t_ast	*new;
 	t_tkn	*tmp;
 	t_tkn	*ret;
-	
+
 	if (!(*token) || (*token)->type == 404)
 		return (NULL);
-	ret = *token;
 	new = ft_memalloc(sizeof(t_ast));
 	new->parent = NULL;
 	new->left = NULL;
@@ -45,12 +44,12 @@ t_ast	*create_leaf(t_tkn **token, int delim)
 	new->type = (*token)->type;
 	new->op_type = (*token)->op_type;
 	new->token = *token;
+	ret = *token;
+	tmp = ret;
 	while (ret->next && ret->type != delim)
 	{
 		tmp = ret;
 		ret = tmp->next;
-		// if (delim == OPERATOR && ret->type == IONUMBER)
-		// 	break ;
 	}
 	*token = ret;
 	tmp->next = NULL;

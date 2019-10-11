@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 13:46:02 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/08 22:12:18 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/10 23:39:13 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,30 +45,6 @@ int		next_op(t_tkn *token, int op)
 		tmp = tmp->next;
 	}
 	return (0);
-}
-
-t_ast	*create_redirect(t_tkn **token)
-{
-	t_ast	*root;
-
-	root = create_leaf(token, OPERATOR);
-	if (((*token)->op_type >= LESS && (*token)->op_type <= CLOBBER) ||
-		(*token)->type == IONUMBER)
-	{
-		if (next_op(*token, REDIRECT))
-		{
-			while (((*token)->op_type >= LESS && (*token)->op_type <= CLOBBER)
-				|| (*token)->type == IONUMBER)
-				root = create_node(root, create_leaf(token, WORD),
-				create_leaf(token, OPERATOR));
-		}
-		else
-		{
-			root = create_node(root, create_leaf(token, WORD),
-			create_leaf(token, OPERATOR));
-		}
-	}
-	return (root);
 }
 
 /*
