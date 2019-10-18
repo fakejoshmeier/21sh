@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 14:24:25 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/07 01:00:36 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/17 19:50:15 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	b_echo(int ac, char **av, t_sh *sh)
 			continue ;
 		ft_printf("%s", av[i]);
 		if (i + 1 < ac)
-			ft_putchar(' ');
+			ft_putchar_fd(' ', STDOUT_FILENO);
 	}
 	if (!nl)
-		ft_putchar('\n');
+		ft_putchar_fd('\n', STDOUT_FILENO);
 }

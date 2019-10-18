@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/06 22:04:07 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/08 16:12:07 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/17 19:47:43 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	b_env(int ac, char **av, t_sh *sh)
 	(void)av;
 	if (ac > 1)
 	{
-		ft_printf("usage: env [-s]\n");
+		ft_fprintf(STDERR_FILENO, "usage: env [-s]\n");
 		return ;
 	}
 	env = map_to_array(&sh->env);

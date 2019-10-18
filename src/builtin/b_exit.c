@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/01 15:39:12 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/01 16:38:52 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/17 19:48:24 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void			b_exit(int ac, char **av, t_sh *sh)
 	(void)av;
 	(void)sh;
 	if (ac != 1)
-		ft_printf("usage: exit\n");
+		ft_fprintf(STDERR_FILENO, "usage: exit\n");
 	else
 		g_running = FALSE;
 }

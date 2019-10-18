@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/02 13:59:35 by jmeier            #+#    #+#             */
-/*   Updated: 2019/03/08 06:28:05 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/17 19:49:13 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	b_setenv(int ac, char **av, t_sh *sh)
 
 	if (ac != 3)
 	{
-		ac == 1 ? b_env(ac, av, sh) : ft_printf("usage: setenv VAR [VALUE]\n");
+		ac == 1 ? b_env(ac, av, sh) : ft_fprintf(STDERR_FILENO,
+		"usage: setenv VAR [VALUE]\n");
 		return ;
 	}
 	new = ft_map_remove(&sh->env, ft_map_hash(&sh->env, av[1]));
