@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/03 11:39:38 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/17 22:40:24 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/19 15:36:17 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int		fd_aggregate(t_tkn *token)
 		token = token->next;
 	}
 	dst_fd = ft_atoi(token->next->val);
-	ft_printf("%i\n", dst_fd);
 	if (token->next->type == IONUMBER)
 		return (fd_dup2(token->next->val, dst_fd, src_fd));
 	else if (ft_strequ(token->next->val, "-"))
@@ -65,9 +64,13 @@ int		fd_redirect(t_tkn *token)
 {
 	int		src_fd;
 
+	if (token->fd != -1)
+		return (0);
 	errno = 0;
-	if (token->type == IONUMBER)
+	if (token->type == IONUMBER && token->next)
 	{
+		if (token->next->type != REDIRECT)
+			return (1);
 		src_fd = ft_atoi(token->val);
 		token = token->next;
 	}
@@ -133,11 +136,8 @@ void	unset_fd(t_ast *ast, t_sh *sh)
 	tmp = ast->token;
 	while (tmp)
 	{
-		if (tmp->type == REDIRECT)
-		{
-			if (tmp->fd != -1)
-				close(tmp->fd);
-		}
+		if (tmp->type == REDIRECT && tmp->fd >= 0)
+			close(tmp->fd);
 		tmp = tmp->next;
 	}
 	enter_raw_mode();

@@ -6,7 +6,7 @@
 /*   By: jmeier <jmeier@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:38:55 by jmeier            #+#    #+#             */
-/*   Updated: 2019/10/10 23:05:36 by jmeier           ###   ########.fr       */
+/*   Updated: 2019/10/19 16:08:13 by jmeier           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,44 +22,48 @@
 ** overview-of-redirection-and-pipe-operators-in-shell
 */
 
-char		**token_to_array(t_tkn *token)
+char		**token_to_array(t_tkn *token, t_sh *sh)
 {
 	t_tkn	*tmp;
 	char	**ret;
 
 	ret = NULL;
-	if (!token)
-		return (NULL);
 	tmp = token;
 	while (tmp)
 	{
-		if (tmp->type == IO_NUMBER)
+		if (tmp->type == IONUMBER)
 			tmp = tmp->next;
-		else if (tmp->type == REDIRECT)
+		else if (tmp->type == REDIRECT || tmp->type == AGGREGATE ||
+		tmp->type == HEREDOC)
 		{
-			if (tmp->next->type == IO_NUMBER)
+			if (tmp->next->type == IONUMBER || (tmp->type == AGGREGATE &&
+				ft_strequ(tmp->next->val, "-")))
 				tmp = tmp->next;
 			tmp = tmp->next->next;
 		}
 		else
 		{
-			ret = ft_arr_add(ret, tmp->val);
+			ret = ft_arr_add(ret, expand(tmp->val, sh));
 			tmp = tmp->next;
 		}
 	}
 	return (ret);
 }
 
-int			exec_command(t_ast *ast, t_sh *s)
+/*
+** Flag is for when I run as a pipe
+*/
+
+int			exec_command(t_ast *ast, t_sh *s, int flag)
 {
 	t_fptr	b_in;
 	char	**av;
 	char	*sys;
 
-	if (!(av = token_to_array(ast->token)))
-		return (1);
 	if (set_fd(ast, s))
 		return (1);
+	if (!(av = token_to_array(ast->token, s)))
+		return (flag ? 0 : 1);
 	ft_strtolower(&av[0]);
 	if (check_executable(av[0]))
 		execute(av[0], av, s);
@@ -69,11 +73,11 @@ int			exec_command(t_ast *ast, t_sh *s)
 		execute(sys, av, s);
 	else
 	{
-		ERROR_PROMPT(COMMAND_ERR, av[0]);
+		ERR_P(COMMAND_ERR, av[0]);
 		return (1);
 	}
-	unset_fd(ast, s);
 	ft_arraydel(&av);
+	unset_fd(ast, s);
 	return (0);
 }
 
@@ -81,6 +85,7 @@ void		execute(char *cmd, char **av, t_sh *sh)
 {
 	pid_t	pid;
 	char	**env;
+	int		status;
 
 	pid = fork();
 	env = NULL;
@@ -88,13 +93,15 @@ void		execute(char *cmd, char **av, t_sh *sh)
 	{
 		tcsetattr(STDIN_FILENO, TCSANOW, &sh->term_settings);
 		env = map_to_array(&sh->env);
-		execve(cmd, av, env);
-		ERROR_PROMPT(COMMAND_FAIL, cmd);
-		ft_arraydel(&av);
-		exit(STDIN_FILENO);
+		if ((status = execve(cmd, av, env)) == -1)
+		{
+			ERR_P(COMMAND_FAIL, cmd);
+			ft_arraydel(&av);
+			exit(1);
+		}
 	}
 	else
-		waitpid(pid, 0, 0);
+		wait(&status);
 	ft_arraydel(&env);
 }
 
@@ -102,7 +109,7 @@ int			check_executable(char *exe)
 {
 	struct stat	info;
 
-	if (!ft_strcmp(dirname(exe), ".") && ft_strncmp(exe, ".", 1))
+	if (ft_strequ(dirname(exe), ".") && ft_strncmp(exe, ".", 1))
 		return (0);
 	if (access(exe, X_OK))
 		return (0);
